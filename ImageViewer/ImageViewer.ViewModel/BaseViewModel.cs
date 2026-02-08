@@ -21,12 +21,12 @@ namespace ImageViewer.ViewModel
 
         public virtual void Initilize<T>(T data)
         {
-            this.InitilizeAsync(data).RunSynchronously();
+            this.InitilizeAsync(data).GetAwaiter().GetResult();
         }
 
-        public virtual Task InitilizeAsync<T>(T data)
+        public  virtual async Task InitilizeAsync<T>(T data)
         {
-            return Task.CompletedTask;
+            
         }
     }
 }

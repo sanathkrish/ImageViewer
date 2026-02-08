@@ -13,14 +13,15 @@ namespace ImageViewer.Service.File
     {
         public async Task<PaginationDataResponse<BaseFile>> GetFiles(PaginationDataRequest<string> request)
         {
-            var files = new PaginationDataResponse<BaseFile>();
+            var paginationDataResponsefiles = new PaginationDataResponse<BaseFile>();
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
             if (Directory.Exists(request.Filter))
             {
-                var t = new Task<PaginationDataResponse<BaseFile>>(() => {
+                var t = Task.Run(() =>
+                {
                     var paginationDataResponse = new PaginationDataResponse<BaseFile>();
                     var directory = new DirectoryInfo(request.Filter);
                     var filesRequest = directory.EnumerateFileSystemInfos();
@@ -60,17 +61,32 @@ namespace ImageViewer.Service.File
                         })
                         .Where(f => f != null)
                         .ToList();
-                    return files;
-                }).ConfigureAwait(false);
-                files = await t;
+                    paginationDataResponse.Data = fileData;
+                    return paginationDataResponse;
+                });
+                return await t;
             }
             else
             {
                 throw new DirectoryNotFoundException($"The directory '{request.Filter}' does not exist.");
             }
+        }
+
+        public  List<string> GetAllImageFiles(string rootFolder)
+        {
+            string[] extensions = new[]
+            {
+        ".jpg", ".jpeg", ".png", ".bmp",
+        ".gif", ".tiff", ".webp"
+            };
+
+            var files = Directory
+                .EnumerateFiles(rootFolder, "*.*", SearchOption.AllDirectories)
+                .Where(file => extensions.Contains(
+                    Path.GetExtension(file).ToLower()))
+                .ToList();
 
             return files;
-
         }
     }
 }

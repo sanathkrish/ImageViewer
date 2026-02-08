@@ -1,4 +1,5 @@
-﻿using ImageViewer.Service.File;
+﻿using AutoMapper;
+using ImageViewer.Service.File;
 using ImageViewer.ViewModel.File;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,18 @@ namespace ImageViewer.ViewModel.Collections
 {
     public class FilesListViewModel:BaseViewModel
     {
-        public FilesListViewModel(FileService fileService)
+        public FilesListViewModel(FileService fileService,IMapper mapper)
         {
             _fileServie = fileService;
+            _mapper = mapper;
         }
         private FileService _fileServie;
+        private IMapper _mapper;
 
         private List<BaseFileViewModel> _data = new List<BaseFileViewModel>();
         private int _totalCount { get; set; }
-        private int _pageSize { get; set; }
-        private int _currentPage { get; set; } = 0;
+        private int _pageSize { get; set; } = 10;
+        private int _currentPage { get; set; } = 1;
 
         public int CurrentPage
         {
@@ -62,6 +65,9 @@ namespace ImageViewer.ViewModel.Collections
         {
             await base.InitilizeAsync(data);
             var response = await _fileServie.GetFiles(new Model.Pagination.PaginationDataRequest<string> { Filter = data as string,PageNumber = this.CurrentPage,PageSize = this.PageSize});
+            this.TotalCount = response.TotalRecords;
+            this.Data = _mapper.Map<List<BaseFileViewModel>>(response.Data);
+
         }
     }
 }
