@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ImageViewer.Model.Pagination;
+using ImageViewer.Service;
 using ImageViewer.Service.BackgroundWorkers;
 using ImageViewer.Service.File;
 using ImageViewer.ViewModel.AutoMapperSetup;
@@ -13,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace ImageViewer.ViewModel
 {
@@ -29,6 +31,11 @@ namespace ImageViewer.ViewModel
             services.AddSingleton<FileService>();
             services.AddSingleton<ThumbnailService>();
             services.AddSingleton<ThumbnailBackgroundWorker>();
+            services.AddSingleton<HashService>();
+            services.AddSingleton<XmlConfigService>(provider =>
+            {
+                return new XmlConfigService("F:\\.thumbnails_1\\config.xml", 300000);
+            });
 
             services.AddTransient<FilesListViewModel>();
             services.AddTransient<BaseFileViewModel>();
@@ -40,27 +47,32 @@ namespace ImageViewer.ViewModel
             IMapper mapper = buildServiceProvider.GetRequiredService<IMapper>();
             var fileService = buildServiceProvider.GetRequiredService<FileService>(); 
             var thumbnailService = buildServiceProvider.GetRequiredService<ThumbnailService>();
-            var xmlService = new XMLFileService();
-            xmlService.CreateXMLFile("F:\\test.xml", "<root><test>Test Content</test></root>");
-            //var imageFiles = fileService.GetAllImageFiles("F:\\").ToList();
-            //Console.WriteLine("Image files found: " + imageFiles.Count);
-            //imageFiles.ForEach(file => {
+            var hashService = buildServiceProvider.GetRequiredService<HashService>();
+             var xmlService = buildServiceProvider.GetRequiredService<XmlConfigService>();
 
-            //    if (new List<string> { ".thumbnails_1" }.Any(ignore =>
-            //    file.Contains(
-            //        Path.DirectorySeparatorChar + ignore +
-            //        Path.DirectorySeparatorChar)))
-            //    {
-            //        return;
-            //    }
-            //    thumbnailService.GetThumbnail(file, (thumbnail) =>
-            //    {
-            //        // Handle the thumbnail (e.g., update UI)
-            //        Console.WriteLine("Thumbnail received for: " + file);
-            //        System.IO.File.WriteAllBytes("F:\\.thumbnails_1\\"+Path.GetFileName(file), thumbnail);
-            //    });
-            //    Task.Delay(100).Wait(); // Simulate some delay in processing each file
-            //});
+            //xmlService.CreateXMLFile("F:\\test.xml", "<root><test>Test Content</test></root>");
+            var imageFiles = fileService.GetAllImageFiles("F:\\").ToList();
+            Console.WriteLine("Image files found: " + imageFiles.Count);
+            imageFiles.ForEach(file =>
+            {
+
+                if (new List<string> { ".thumbnails_1" }.Any(ignore =>
+                file.Contains(
+                    Path.DirectorySeparatorChar + ignore +
+                    Path.DirectorySeparatorChar)))
+                {
+                    return;
+                }
+                thumbnailService.GetThumbnail(file, (thumbnail) =>
+                {
+                    var pathHash = hashService.GeneratePathHash(file)+Path.GetExtension(file);
+                    // Handle the thumbnail (e.g., update UI)
+                    Console.WriteLine("Thumbnail received for: " + pathHash);
+                    System.IO.File.WriteAllBytes("F:\\.thumbnails_1\\" + pathHash, thumbnail);
+                    xmlService.AddOrUpdateBuffered("thumbnails", file, pathHash );
+                });
+                Task.Delay(100).Wait(); // Simulate some delay in processing each file
+            });
             //var fileService = new Service.File.FileService();
             //var file = fileService.GetFiles(new PaginationDataRequest<string>
             //{
