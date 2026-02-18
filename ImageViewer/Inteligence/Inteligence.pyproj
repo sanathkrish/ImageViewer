@@ -24,6 +24,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Inteligence.py" />
+    <Compile Include="Models\ImageMetaInfo.py" />
     <Compile Include="services\ImageFileMetaInfo.py" />
     <Compile Include="SqliteDataService\SqliteDBService.py" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <InterpreterReference Include="CondaEnv|CondaEnv|learn" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\" />
     <Folder Include="SqliteDataService\" />
     <Folder Include="services\" />
   </ItemGroup>
