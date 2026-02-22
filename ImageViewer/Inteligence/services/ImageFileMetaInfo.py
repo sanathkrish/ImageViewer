@@ -2,7 +2,7 @@ from SqliteDataService.SqliteDBService import ImageMetaDB
 import pathlib as pl
 
 
-class ImageMetaData:
+class ImageFileMetaInfo:
    def __init__(self):
        self.database = ImageMetaDB()
    def Initilize(self):
@@ -13,3 +13,5 @@ class ImageMetaData:
        self.database.update_json(id,meta_info);
    def get_meta_info(self,image_path):
        return
+   def is_processed(self,image_path)-> bool:
+       return self.database.exist(image_path)

@@ -191,8 +191,8 @@ class ImageMetaDB:
     # Delete record
     # -----------------------------
     def delete(self, image_id: int):
-        conn = self._connect()
         cursor = conn.cursor()
+        conn = self._connect()
 
         cursor.execute(
             "DELETE FROM image_meta WHERE id=?",
@@ -201,3 +201,14 @@ class ImageMetaDB:
 
         conn.commit()
         conn.close()
+
+    def exist(self,image_path:str)->bool:
+        conn = self._connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id FROM image_meta WHERE image_path=?",
+            (image_path,)
+        )
+        row = cursor.fetchone()
+        conn.close()
+        return row is not None

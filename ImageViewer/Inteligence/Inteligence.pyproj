@@ -25,6 +25,8 @@
   <ItemGroup>
     <Compile Include="Inteligence.py" />
     <Compile Include="Models\ImageMetaInfo.py" />
+    <Compile Include="services\FaceComparision.py" />
+    <Compile Include="services\GetFaces.py" />
     <Compile Include="services\ImageFileMetaInfo.py" />
     <Compile Include="SqliteDataService\SqliteDBService.py" />
   </ItemGroup>
