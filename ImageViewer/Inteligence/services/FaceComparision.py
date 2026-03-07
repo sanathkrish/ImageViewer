@@ -1,7 +1,7 @@
-import deepface
+from deepface import DeepFace
 class FaceComparision:
     def __init__(self):
-        self.deepFace = deepface.DeepFace
+        self.deepFace = DeepFace
     def compare_face(self, image1_path, image2_path):
         return self.deepFace.verify(image1_path, image2_path)
         # self.face_recognition = face_recognition

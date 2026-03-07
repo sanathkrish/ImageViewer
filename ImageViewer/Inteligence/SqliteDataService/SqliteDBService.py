@@ -34,8 +34,17 @@ class ImageMetaDB:
         );
         """)
 
+        cursor.execute("""
+        create table if not exists compare_face_image_results(
+        id integer primary key autoincrement,
+        image_path text not null,
+        face_matching_with_id integer not null,
+        face_matching_result text,
+        """)
+
         conn.commit()
         conn.close()
+
 
     # -----------------------------
     # Insert image meta

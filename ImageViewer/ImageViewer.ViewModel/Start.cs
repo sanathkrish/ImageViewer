@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.IO.Pipes;
 
 namespace ImageViewer.ViewModel
 {
@@ -51,28 +52,28 @@ namespace ImageViewer.ViewModel
              var xmlService = buildServiceProvider.GetRequiredService<XmlConfigService>();
 
             //xmlService.CreateXMLFile("F:\\test.xml", "<root><test>Test Content</test></root>");
-            var imageFiles = fileService.GetAllImageFiles("F:\\").ToList();
-            Console.WriteLine("Image files found: " + imageFiles.Count);
-            imageFiles.ForEach(file =>
-            {
+            //var imageFiles = fileService.GetAllImageFiles("F:\\").ToList();
+            //Console.WriteLine("Image files found: " + imageFiles.Count);
+            //imageFiles.ForEach(file =>
+            //{
 
-                if (new List<string> { ".thumbnails_1" }.Any(ignore =>
-                file.Contains(
-                    Path.DirectorySeparatorChar + ignore +
-                    Path.DirectorySeparatorChar)))
-                {
-                    return;
-                }
-                thumbnailService.GetThumbnail(file, (thumbnail) =>
-                {
-                    var pathHash = hashService.GeneratePathHash(file)+Path.GetExtension(file);
-                    // Handle the thumbnail (e.g., update UI)
-                    Console.WriteLine("Thumbnail received for: " + pathHash);
-                    System.IO.File.WriteAllBytes("F:\\.thumbnails_1\\" + pathHash, thumbnail);
-                    xmlService.AddOrUpdateBuffered("thumbnails", file, pathHash );
-                });
-                Task.Delay(100).Wait(); // Simulate some delay in processing each file
-            });
+            //    if (new List<string> { ".thumbnails_1" }.Any(ignore =>
+            //    file.Contains(
+            //        Path.DirectorySeparatorChar + ignore +
+            //        Path.DirectorySeparatorChar)))
+            //    {
+            //        return;
+            //    }
+            //    thumbnailService.GetThumbnail(file, (thumbnail) =>
+            //    {
+            //        var pathHash = hashService.GeneratePathHash(file)+Path.GetExtension(file);
+            //        // Handle the thumbnail (e.g., update UI)
+            //        Console.WriteLine("Thumbnail received for: " + pathHash);
+            //        System.IO.File.WriteAllBytes("F:\\.thumbnails_1\\" + pathHash, thumbnail);
+            //        xmlService.AddOrUpdateBuffered("thumbnails", file, pathHash );
+            //    });
+            //    Task.Delay(100).Wait(); // Simulate some delay in processing each file
+            //});
             //var fileService = new Service.File.FileService();
             //var file = fileService.GetFiles(new PaginationDataRequest<string>
             //{
@@ -83,6 +84,18 @@ namespace ImageViewer.ViewModel
             //var basefiles = mapper.Map<PaginationDataResponse<BaseFileViewModel>>(file);
             //var vm =buildServiceProvider.GetRequiredService<FilesListViewModel>();
             //vm.Initilize<String>("F:\\");
+            var PIPE_NAME = "\\.\\pipe\\facepipe";
+
+            using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", "facepipe", PipeDirection.InOut)) {
+                string handshake = "ping";
+                pipeClient.Connect();
+                byte[] lengthBytes =
+                BitConverter.GetBytes(handshake.Length);
+                pipeClient.pipe.Write(imageBytes, 0, imageBytes.Length);
+                pipe.Flush();
+            }
+
+
             Console.ReadKey();
             
             // Mapper is now configured and can be used throughout the application 
