@@ -91,8 +91,22 @@ namespace ImageViewer.ViewModel
                 pipeClient.Connect();
                 byte[] lengthBytes =
                 BitConverter.GetBytes(handshake.Length);
-                pipeClient.pipe.Write(imageBytes, 0, imageBytes.Length);
-                pipe.Flush();
+                pipeClient.Write(lengthBytes, 0, lengthBytes.Count());
+                pipeClient.Flush();
+
+                while (true)
+                {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
+                    string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    Console.WriteLine("Received from server: " + response);
+                    if (response == "pong")
+                    {
+                        Console.WriteLine("Handshake successful!");
+                        break;
+                    }
+                }
+
             }
 
 

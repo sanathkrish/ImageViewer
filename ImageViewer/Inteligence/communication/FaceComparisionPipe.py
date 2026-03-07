@@ -1,5 +1,5 @@
-import BasePipeCommunication
-class FaceComparisionPipe(BasePipeCommunication.BasePipeCommunication):
+from .BasePipeCommunication import BasePipeCommunication
+class FaceComparisionPipe(BasePipeCommunication):
     def __init__(self):
         pass
     def connect(self,pipe_name):

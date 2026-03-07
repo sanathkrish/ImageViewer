@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "ImageViewer.ViewModel\\ImageViewer.ViewModel.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Inteligence\\Inteligence.pyproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

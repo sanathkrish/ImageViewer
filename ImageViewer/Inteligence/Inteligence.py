@@ -16,7 +16,6 @@ import SqliteDataService.SqliteDBService
 if __name__ == "__main__":
     import communication.FaceComparisionPipe
     PIPE_NAME = r'\\.\pipe\facepipe'
-    cv2.waitKey(1)
     instance = communication.FaceComparisionPipe.FaceComparisionPipe()
     instance.connect(PIPE_NAME)
    # faceComparision = FaceComparision.FaceComparision()
