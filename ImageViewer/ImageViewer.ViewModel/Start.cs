@@ -85,26 +85,42 @@ namespace ImageViewer.ViewModel
             //var vm =buildServiceProvider.GetRequiredService<FilesListViewModel>();
             //vm.Initilize<String>("F:\\");
             var PIPE_NAME = "\\.\\pipe\\facepipe";
+            string param = "F:\\faces\\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg,F:\\faces\\KMR_6833_65f7e950-77ef-4e62-bbbe-8c55cc1bd89b.jpg";
 
             using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", "facepipe", PipeDirection.InOut)) {
                 string handshake = "ping";
                 pipeClient.Connect();
-                byte[] lengthBytes =
-                BitConverter.GetBytes(handshake.Length);
-                pipeClient.Write(lengthBytes, 0, lengthBytes.Count());
+                List<byte> lengthBytes = Encoding.UTF8.GetBytes(handshake).ToList();
+                pipeClient.Write(lengthBytes.ToArray(), 0, lengthBytes.Count());
                 pipeClient.Flush();
-
-                while (true)
+                byte[] buffer = new byte[1024];
+                int bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
+                string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                Console.WriteLine("Received from server: " + response);
+                if (response == "pong")
                 {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
-                    string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    Console.WriteLine("Received from server: " + response);
-                    if (response == "pong")
+                    Console.WriteLine("Handshake successful!");
+                } else
+                {
+                    return;
+                }
+                    while (true)
                     {
-                        Console.WriteLine("Handshake successful!");
-                        break;
-                    }
+                        lengthBytes = Encoding.UTF8.GetBytes(param).ToList();
+                        pipeClient.Write(lengthBytes.ToArray(), 0, lengthBytes.Count());
+                        List<byte> data = new List<byte>();
+                        buffer = new byte[1024];
+                        bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
+                        while(bytesRead > 0)
+                        {
+                            data.AddRange(buffer.Take(bytesRead));
+                        bytesRead = 0;
+                        if (data.Count() >= 1024)
+                            bytesRead = pipeClient.Read(buffer, data.Count()-1, buffer.Length);
+                        }
+
+                    var message = Encoding.UTF8.GetString(data.ToArray());
+                    Console.WriteLine(message);
                 }
 
             }

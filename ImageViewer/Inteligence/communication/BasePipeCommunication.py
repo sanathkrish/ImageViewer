@@ -19,4 +19,8 @@ class BasePipeCommunication:
                 )
     def wait_for_client(self):
         win32pipe.ConnectNamedPipe(self.pipe, None);
-        win32file.WriteFile(self.pipe,b"pong")
+        result,pingBytes = win32file.ReadFile(self.pipe,65536)
+        pingData =  pingBytes.decode('utf-8')
+        if( pingData.strip() == 'ping'):
+            win32file.WriteFile(self.pipe,b"pong")
+            print('Pinged and ponged')
