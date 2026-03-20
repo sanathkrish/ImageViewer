@@ -1,6 +1,6 @@
+from Models.PipeResonse import PipeResponse
 from .BasePipeCommunication import BasePipeCommunication
 from services import FaceComparision
-from win32file import ReadFile, WriteFile
 from time import sleep
 
 class FaceComparisionPipe(BasePipeCommunication):
@@ -12,9 +12,6 @@ class FaceComparisionPipe(BasePipeCommunication):
         self.create_pipe(pipe_name)
         try:
             self.wait_for_client()
-            self.is_connected = True
-            print("Client connected to pipe")
-
         except Exception as ex:
             print("Failed to connect to client")
             pass
@@ -22,14 +19,17 @@ class FaceComparisionPipe(BasePipeCommunication):
         print("Waiting for data from client...")
         while True:
             try:
-                sleep(10)
-                result, data = ReadFile(self.pipe, 65536)
-                if result == 0:
+                response = PipeResponse('pass',None);
+                data = self.read_message()
+                if len(data)>0:
                     print("Data received from client")
-                    data_str = data.decode('utf-8')
-                    image1_path, image2_path = data_str.split(',')
-                    comparison_result = self.faceComparision.compare_face(image1_path, image2_path)
-                    WriteFile(self.pipe, str(comparison_result).encode('utf-8'))
+                    json_data = json.loads(data);
+                    #image1_path, image2_path = data_str.split(',')
+                    comparison_result = self.faceComparision.compare_face(json_data['left_image'], json_data['right_image'])
+                    response = PipeResponse('pass',str(comparison_result));
             except Exception as ex:
-                print("Error reading from pipe:", ex)
-                continue
+               print("Error reading from pipe:", ex)
+               response = PipeResponse('fail',None);
+               self.send_message(response);
+               continue;
+

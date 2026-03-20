@@ -84,47 +84,61 @@ namespace ImageViewer.ViewModel
             //var basefiles = mapper.Map<PaginationDataResponse<BaseFileViewModel>>(file);
             //var vm =buildServiceProvider.GetRequiredService<FilesListViewModel>();
             //vm.Initilize<String>("F:\\");
-            var PIPE_NAME = "\\.\\pipe\\facepipe";
-            string param = "F:\\faces\\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg,F:\\faces\\KMR_6833_65f7e950-77ef-4e62-bbbe-8c55cc1bd89b.jpg";
+            //var PIPE_NAME = "\\.\\pipe\\facepipe";
+            //string param = "F:\\faces\\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg,F:\\faces\\KMR_6833_65f7e950-77ef-4e62-bbbe-8c55cc1bd89b.jpg";
 
-            using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", "facepipe", PipeDirection.InOut)) {
-                string handshake = "ping";
-                pipeClient.Connect();
-                List<byte> lengthBytes = Encoding.UTF8.GetBytes(handshake).ToList();
-                pipeClient.Write(lengthBytes.ToArray(), 0, lengthBytes.Count());
-                pipeClient.Flush();
-                byte[] buffer = new byte[1024];
-                int bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
-                string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                Console.WriteLine("Received from server: " + response);
-                if (response == "pong")
-                {
-                    Console.WriteLine("Handshake successful!");
-                } else
-                {
-                    return;
-                }
-                    while (true)
-                    {
-                        lengthBytes = Encoding.UTF8.GetBytes(param).ToList();
-                        pipeClient.Write(lengthBytes.ToArray(), 0, lengthBytes.Count());
-                        List<byte> data = new List<byte>();
-                        buffer = new byte[1024];
-                        bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
-                        while(bytesRead > 0)
-                        {
-                            data.AddRange(buffer.Take(bytesRead));
-                        bytesRead = 0;
-                        if (data.Count() >= 1024)
-                            bytesRead = pipeClient.Read(buffer, data.Count()-1, buffer.Length);
-                        }
+            //using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", "facepipe", PipeDirection.InOut)) {
+            //    string handshake = "ping";
+            //    pipeClient.Connect();
+            //    List<byte> lengthBytes = Encoding.UTF8.GetBytes(handshake).ToList();
+            //    pipeClient.Write(lengthBytes.ToArray(), 0, lengthBytes.Count());
+            //    pipeClient.Flush();
+            //    byte[] buffer = new byte[1024];
+            //    int bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
+            //    string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            //    Console.WriteLine("Received from server: " + response);
+            //    if (response == "pong")
+            //    {
+            //        Console.WriteLine("Handshake successful!");
+            //    } else
+            //    {
+            //        return;
+            //    }
+            //        while (true)
+            //        {
+            //            lengthBytes = Encoding.UTF8.GetBytes(param).ToList();
+            //            pipeClient.Write(lengthBytes.ToArray(), 0, lengthBytes.Count());
+            //            List<byte> data = new List<byte>();
+            //            buffer = new byte[1024];
+            //            bytesRead = pipeClient.Read(buffer, 0, buffer.Length);
+            //            while(bytesRead > 0)
+            //            {
+            //                data.AddRange(buffer.Take(bytesRead));
+            //            bytesRead = 0;
+            //            if (data.Count() >= 1024)
+            //                bytesRead = pipeClient.Read(buffer, data.Count()-1, buffer.Length);
+            //            }
 
-                    var message = Encoding.UTF8.GetString(data.ToArray());
-                    Console.WriteLine(message);
-                }
+            //        var message = Encoding.UTF8.GetString(data.ToArray());
+            //        Console.WriteLine(message);
+            //    }
 
+            //}
+            var pipe = new ImageComparisionPipe();
+            pipe.Initilize().GetAwaiter().GetResult();
+            var image1 = string.Empty;
+            var image2 = string.Empty;
+            pipe.CompareImage(@"F:\faces\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg", @"F:\faces\KMR_6833_65f7e950-77ef-4e62-bbbe-8c55cc1bd89b.jpg").GetAwaiter().GetResult();
+            Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
+            while (true)
+            {
+                Console.WriteLine("Enter first image path:");
+                image1 = Console.ReadLine();
+                Console.WriteLine("Enter second image path:");
+                image2 = Console.ReadLine();
+                pipe.CompareImage(image1, image2).GetAwaiter().GetResult();
+                Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
             }
-
 
             Console.ReadKey();
             
