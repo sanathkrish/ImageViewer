@@ -31,11 +31,11 @@ class BasePipeCommunication:
         #             None
         #         )
     def wait_for_client(self):
-        result,pingBytes = win32file.win32file.ReadFile(self.pipe,65536)
+        result,pingBytes = win32file.ReadFile(self.pipe,65536)
         pingData =  pingBytes.decode('utf-8')
         if( pingData.strip() == 'ping'):
-            win32file.win32file.WriteFile(self.pipe,b"pong")
-            win32file.win32file.FlushFileBuffers(self.pipe)
+            win32file.WriteFile(self.pipe,b"pong")
+            win32file.FlushFileBuffers(self.pipe)
             print('Pinged and ponged')
     def send_message(self,data:Any):
         win32file.WriteFile(self.pipe, json.dumps(data.__dict__).encode('utf-8'));

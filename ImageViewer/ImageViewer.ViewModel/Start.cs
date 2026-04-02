@@ -124,19 +124,32 @@ namespace ImageViewer.ViewModel
             //    }
 
             //}
-            var pipe = new ImageComparisionPipe();
+            //var pipe = new ImageComparisionPipe();
+            //pipe.Initilize().GetAwaiter().GetResult();
+            //var image1 = string.Empty;
+            //var image2 = string.Empty;
+            //pipe.CompareImage(@"F:\faces\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg", @"F:\faces\KMR_6833_65f7e950-77ef-4e62-bbbe-8c55cc1bd89b.jpg").GetAwaiter().GetResult();
+            //Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
+            //while (true)
+            //{
+            //    Console.WriteLine("Enter first image path:");
+            //    image1 = Console.ReadLine();
+            //    Console.WriteLine("Enter second image path:");
+            //    image2 = Console.ReadLine();
+            //    pipe.CompareImage(image1, image2).GetAwaiter().GetResult();
+            //    Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
+            //}
+            var pipe = new FindFacePipe();
             pipe.Initilize().GetAwaiter().GetResult();
             var image1 = string.Empty;
             var image2 = string.Empty;
-            pipe.CompareImage(@"F:\faces\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg", @"F:\faces\KMR_6833_65f7e950-77ef-4e62-bbbe-8c55cc1bd89b.jpg").GetAwaiter().GetResult();
+            pipe.GetFaces(@"F:\faces\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg").GetAwaiter().GetResult();
             Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
             while (true)
             {
                 Console.WriteLine("Enter first image path:");
                 image1 = Console.ReadLine();
-                Console.WriteLine("Enter second image path:");
-                image2 = Console.ReadLine();
-                pipe.CompareImage(image1, image2).GetAwaiter().GetResult();
+                pipe.GetFaces(image1).GetAwaiter().GetResult();
                 Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
             }
 

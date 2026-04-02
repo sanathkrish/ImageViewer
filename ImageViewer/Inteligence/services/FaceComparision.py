@@ -4,6 +4,8 @@ class FaceComparision:
         self.deepFace = DeepFace
     def compare_face(self, image1_path, image2_path):
         return self.deepFace.verify(image1_path, image2_path)
+    def get_faces(self,image_path):
+        return self.deepFace.extract_faces(image_path)
         # self.face_recognition = face_recognition
     # def compare_faces(self, image1_path, image2_path):
     #     # Load the images and encode the faces
