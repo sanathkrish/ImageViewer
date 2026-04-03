@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>ImageViewer.Controls</RootNamespace>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <WinUISDKReferences>false</WinUISDKReferences>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Explorer.xaml" />
+    <None Remove="InitialWindow.xaml" />
+    <None Remove="Pages\ImageAnalysis.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Events\" />
+    <Folder Include="Navigation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\ImageAnalysis.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Explorer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="InitialWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  
+</Project>

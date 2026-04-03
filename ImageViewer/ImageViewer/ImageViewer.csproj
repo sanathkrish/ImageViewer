@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -40,10 +40,16 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260101001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
     <PackageReference Include="Quartz" Version="3.15.1" />
     <PackageReference Include="Quartz.Jobs" Version="3.15.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImageViewer.Controls\ImageViewer.Controls.csproj" />
+    <ProjectReference Include="..\ImageViewer.Model\ImageViewer.Model.csproj" />
+    <ProjectReference Include="..\ImageViewer.Service\ImageViewer.Service.csproj" />
+    <ProjectReference Include="..\ImageViewer.ViewModel\ImageViewer.ViewModel.csproj" />
   </ItemGroup>
 
   <!--
