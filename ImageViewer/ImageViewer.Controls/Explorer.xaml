@@ -6,9 +6,29 @@
     xmlns:local="using:ImageViewer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cc="using:ImageViewer.Controls.Elements"
+    xmlns:model="using:ImageViewer.ViewModel.File"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock>Explorer</TextBlock>
-    </Grid>
+    <GridView ItemsSource="{Binding Data}"
+          IsItemClickEnabled="True"
+          SelectionMode="None"
+          ItemClick="GridView_ItemClick">
+
+        <GridView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <ItemsWrapGrid Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+        </GridView.ItemsPanel>
+
+        <GridView.ItemTemplate>
+            <DataTemplate>
+                    <!--<Image Source="{Binding Path}"
+                       Width="150"
+                       Height="150"
+                       Stretch="UniformToFill"/>-->
+                <cc:ItemView DataContext="{Binding }"></cc:ItemView>
+            </DataTemplate>
+        </GridView.ItemTemplate>
+    </GridView>
 </Page>

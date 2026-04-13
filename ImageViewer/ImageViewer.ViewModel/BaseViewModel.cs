@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace ImageViewer.ViewModel
 {
-    public abstract class BaseViewModel : NotifyPropertyChanged
+    public abstract class BaseViewModel : ObservableObject
     {
+        protected ServiceProvider ServiceCollection => CustomServiceCollection.CustomServiceCollection.ServiceProvider;
         private string title = string.Empty;
         public string Title
         {

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using CommunityToolkit.Mvvm.ComponentModel;
 using ImageViewer.Service.File;
 using ImageViewer.ViewModel.File;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ImageViewer.ViewModel.Collections
 {
@@ -19,7 +22,7 @@ namespace ImageViewer.ViewModel.Collections
         private FileService _fileServie;
         private IMapper _mapper;
 
-        private List<BaseFileViewModel> _data = new List<BaseFileViewModel>();
+        private ObservableCollection<BaseFileViewModel> _data = new ObservableCollection<BaseFileViewModel>();
         private int _totalCount { get; set; }
         private int _pageSize { get; set; } = 10;
         private int _currentPage { get; set; } = 1;
@@ -51,7 +54,7 @@ namespace ImageViewer.ViewModel.Collections
                 OnPropertyChanged();
             }
         }
-        public List<BaseFileViewModel> Data
+        public ObservableCollection<BaseFileViewModel> Data
         {
             get { return _data; }
             set
@@ -61,12 +64,34 @@ namespace ImageViewer.ViewModel.Collections
             }
         }
 
+       private string currentPath { get; set; }
+
         public override async Task InitilizeAsync<String>(String data)
         {
+            currentPath = data.ToString();
             await base.InitilizeAsync(data);
-            var response = await _fileServie.GetFiles(new Model.Pagination.PaginationDataRequest<string> { Filter = data as string,PageNumber = this.CurrentPage,PageSize = this.PageSize});
+            await GetFiles( data.ToString(), CurrentPage, PageSize);
+
+        }
+
+        private async Task GetFiles(string data,int pageNumber,int pageSize)
+        {
+            var response = await _fileServie.GetFiles(new Model.Pagination.PaginationDataRequest<string> { Filter = data as string, PageNumber = this.CurrentPage, PageSize = this.PageSize });
             this.TotalCount = response.TotalRecords;
-            this.Data = _mapper.Map<List<BaseFileViewModel>>(response.Data);
+            if(this.Data == null)
+            {
+                this.Data = _mapper.Map<ObservableCollection<BaseFileViewModel>>(response.Data);
+            } else
+            {
+                _mapper.Map<List<BaseFileViewModel>>(response.Data).ForEach(d=> this.Data.Add(d));
+                OnPropertyChanged(nameof(Data));
+            }
+        }
+
+        public async void GetNextAsync() 
+        {
+            this.CurrentPage++;
+           await GetFiles(currentPath, CurrentPage, PageSize);
 
         }
     }

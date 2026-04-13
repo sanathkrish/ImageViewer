@@ -1,3 +1,6 @@
+using ImageViewer.ViewModel.Collections;
+using ImageViewer.ViewModel.CustomServiceCollection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -23,9 +26,22 @@ namespace ImageViewer.Controls
     /// </summary>
     public sealed partial class Explorer : Page
     {
+        private FilesListViewModel _vm;
         public Explorer()
         {
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e); 
+            _vm = CustomServiceCollection.ServiceProvider.GetService<FilesListViewModel>();
+            _vm.InitilizeAsync("F:\\").ConfigureAwait(false);
+            this.DataContext = _vm;
+        }
+        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
         }
     }
 }
