@@ -62,6 +62,9 @@ namespace ImageViewer.ViewModel.File
             }
         }
 
+        public bool IsDirectory => FileType == FileType.Directory;
+        public bool IsFile => FileType == FileType.File;
+
         public override void Initilize<BaseFile>(BaseFile data)
         {
             base.Initilize(data);

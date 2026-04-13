@@ -1,4 +1,5 @@
 using ImageViewer.ViewModel.File;
+using ImageViewer.ViewModel.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -21,8 +22,7 @@ namespace ImageViewer.Controls.Elements
 {
     public sealed partial class BaseItemView : UserControl
     {
-        protected BaseFileViewModel vm { get; set; }
-        protected bool IsImage { get; set; } = false;
+        protected BaseItemViewModel vm { get; set; }
         public BaseItemView()
         {
             InitializeComponent();
@@ -31,7 +31,16 @@ namespace ImageViewer.Controls.Elements
 
         private void BaseItemView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            this.vm = args.NewValue as BaseFileViewModel;
+            this.vm = args.NewValue as BaseItemViewModel;
+            if(this.vm != null)
+            {
+                this.vm.RetriggerProperty();
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

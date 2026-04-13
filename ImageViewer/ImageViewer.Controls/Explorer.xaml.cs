@@ -1,5 +1,6 @@
 using ImageViewer.ViewModel.Collections;
 using ImageViewer.ViewModel.CustomServiceCollection;
+using ImageViewer.ViewModel.File;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -41,7 +42,13 @@ namespace ImageViewer.Controls
         }
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            var item = e.ClickedItem as BaseFileViewModel;
+            if (item != null) { 
+               if(item.IsDirectory)
+                {
+                    _vm.InitilizeAsync(item.Path).ConfigureAwait(false);
+                }
+            }
         }
     }
 }

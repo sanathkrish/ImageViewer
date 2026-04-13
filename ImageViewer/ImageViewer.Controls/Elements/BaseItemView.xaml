@@ -9,6 +9,9 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBox Text="{Binding Name,TargetNullValue='No Name'}" ></TextBox>
+        <Image   Width="100" Height="100" x:Name="item_image" Source="{Binding ItemImage}" Visibility="">
+               
+            </Image>
+       
     </Grid>
 </UserControl>

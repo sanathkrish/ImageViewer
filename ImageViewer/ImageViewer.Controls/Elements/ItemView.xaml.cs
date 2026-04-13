@@ -1,4 +1,5 @@
 using ImageViewer.ViewModel.File;
+using ImageViewer.ViewModel.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -21,9 +22,21 @@ namespace ImageViewer.Controls.Elements
 {
     public sealed partial class ItemView : UserControl
     {
+        public BaseItemViewModel baseFile = new BaseItemViewModel();
         public ItemView()
         {
             InitializeComponent();
+            DataContextChanged += ItemView_DataContextChanged;
+        }
+
+        private void ItemView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            baseFile = args.NewValue as BaseItemViewModel;
+            if (baseFile != null)
+            {
+               baseFile.RetriggerProperty();
+                this.ApplyTemplate();
+            }
         }
 
         // Dependency Property

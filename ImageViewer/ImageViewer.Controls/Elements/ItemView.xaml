@@ -10,6 +10,6 @@
     x:Name="root">
 
     <StackPanel Orientation="Vertical">
-        <local:BaseItemView DataContext="{x:Bind root.DataContext}"></local:BaseItemView>
+        <local:BaseItemView DataContext="{x:Bind baseFile}"></local:BaseItemView>
     </StackPanel>
 </UserControl>
