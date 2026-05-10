@@ -24,10 +24,10 @@ namespace ImageViewer.Service.File
                 {
                     var paginationDataResponse = new PaginationDataResponse<BaseFile>();
                     var directory = new DirectoryInfo(request.Filter);
-                    var filesRequest = directory.EnumerateFileSystemInfos();
+                    var filesRequest = directory.EnumerateFileSystemInfos().OrderByDescending(f => f.Attributes.HasFlag(FileAttributes.Directory));
                     paginationDataResponse.TotalRecords = filesRequest.Count();
 
-                    var fileData = filesRequest.OrderBy(f => f.Name)
+                    var fileData = filesRequest
                         .Skip((request.PageNumber - 1) * request.PageSize)
                         .Take(request.PageSize)
                         .Select(f =>

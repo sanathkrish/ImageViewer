@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -14,33 +15,48 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace ImageViewer.Controls.Elements
 {
-    public sealed partial class BaseItemView : UserControl
+    public sealed partial class BaseItemView : UserControl,IDisposable
     {
-        protected BaseItemViewModel vm { get; set; }
+        protected BaseItemViewModel _vm { get; set; }
         public BaseItemView()
         {
             InitializeComponent();
-            this.DataContextChanged += BaseItemView_DataContextChanged;
         }
 
-        private void BaseItemView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        public void Initilize(BaseItemViewModel vm)
         {
-            this.vm = args.NewValue as BaseItemViewModel;
-            if(this.vm != null)
+            _vm = vm;
+            DataContext = _vm;
+            if (DataContext != null) {
+            this._vm.onThumbnailAvailableCallBack += (byte[] thumbnailData) =>
             {
-                this.vm.RetriggerProperty();
+                this.DispatcherQueue.TryEnqueue(() =>
+                {
+                    using var stream = new InMemoryRandomAccessStream();
+                    stream.WriteAsync(thumbnailData.AsBuffer()).GetAwaiter().GetResult();
+                    stream.Seek(0);
+
+                    var bitmap = new BitmapImage();
+                    bitmap.SetSourceAsync(stream).GetAwaiter().GetResult();
+                    this.ItemImage.Source = bitmap;
+                });
+            };
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void Dispose()
         {
-
+            if(this._vm != null)
+            {
+                this._vm.isViewUnassigned = true;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using ImageViewer.Model;
 using ImageViewer.Model.File;
 using ImageViewer.ViewModel.File;
+using ImageViewer.ViewModel.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace ImageViewer.ViewModel.AutoMapperSetup
             CreateMap<BaseFile, BaseFileViewModel>().ReverseMap();
             CreateMap<FileInfo, FileInfoViewModel>().ReverseMap();
             CreateMap<DirectoryDetails, DirectoryInfoViewModel>().ReverseMap();
+            CreateMap<BaseFileViewModel, BaseItemViewModel>().ReverseMap();
                 //.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files))
                 //.ForMember(dest => dest.SubDirectories, opt => opt.MapFrom(src => src.SubDirectories));
         }

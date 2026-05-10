@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ImageViewer.Service.File;
+using ImageViewer.Service.Interfaces;
 using ImageViewer.ViewModel.File;
 using System;
 using System.Collections.Generic;
@@ -14,18 +16,33 @@ namespace ImageViewer.ViewModel.Collections
 {
     public class FilesListViewModel:BaseViewModel
     {
-        public FilesListViewModel(FileService fileService,IMapper mapper)
+        public FilesListViewModel(FileService fileService,IMapper mapper,INavigationService navigationService)
         {
             _fileServie = fileService;
             _mapper = mapper;
+            _navigationService = navigationService;
+            this._selectedItemCommand = new RelayCommand<BaseFileViewModel>((param) =>
+            {
+                if(param != null && param.IsDirectory)
+                {
+                    this._navigationService.Navigate("explorer_content", "ExplorerContent", param.Path);
+                }
+            });
+            NavigateBack = new Views.NavigateBackItemViewModel(navigationService, "explorer_content");
         }
         private FileService _fileServie;
         private IMapper _mapper;
+        private INavigationService _navigationService;
+        private Views.NavigateBackItemViewModel _navigateBack;
+        public Views.NavigateBackItemViewModel NavigateBack {  get { return _navigateBack; } set { _navigateBack = value; OnPropertyChanged(); }  }
 
         private ObservableCollection<BaseFileViewModel> _data = new ObservableCollection<BaseFileViewModel>();
         private int _totalCount { get; set; }
-        private int _pageSize { get; set; } = 10;
+        private int _pageSize { get; set; } = 100;
         private int _currentPage { get; set; } = 1;
+
+        private RelayCommand<BaseFileViewModel> _selectedItemCommand;
+       public RelayCommand<BaseFileViewModel> SelectItemCommand { get { return _selectedItemCommand; } }
 
         public int CurrentPage
         {

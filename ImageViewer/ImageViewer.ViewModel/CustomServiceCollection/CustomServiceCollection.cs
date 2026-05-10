@@ -18,6 +18,7 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
     public class CustomServiceCollection
     {
         private static ServiceProvider _serviceProvider;
+        private static ServiceCollection _serviceCollection = new ServiceCollection();
         public static ServiceProvider ServiceProvider 
         {
             get
@@ -29,37 +30,39 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
                 return _serviceProvider;
             }
         }
-        public static ServiceCollection GetServiceCollection()
+        public static void Initilize()
         {
-            ServiceCollection services = new ServiceCollection();
-            services.AddLogging(builder =>
+            _serviceCollection.AddLogging(builder =>
             {
                 //builder.Configure((da)=>);
                 builder.SetMinimumLevel(LogLevel.Information);
             });
-            services.AddSingleton<FileService>();
-            services.AddSingleton<ThumbnailService>();
-            services.AddSingleton<ThumbnailBackgroundWorker>();
-            services.AddSingleton<HashService>();
-            services.AddSingleton<XmlConfigService>(provider =>
+            _serviceCollection.AddSingleton<FileService>();
+            _serviceCollection.AddSingleton<ThumbnailService>(new ThumbnailService(new ThumbnailBackgroundWorker()));
+            _serviceCollection.AddSingleton<ThumbnailBackgroundWorker>();
+            _serviceCollection.AddSingleton<HashService>();
+            _serviceCollection.AddSingleton<XmlConfigService>(provider =>
             {
                 return new XmlConfigService("F:\\.thumbnails_1\\config.xml", 300000);
             });
 
-            services.AddTransient<FilesListViewModel>();
-            services.AddTransient<BaseFileViewModel>();
-            services.AddTransient<DirectoryInfoViewModel>();
-            services.AddTransient<FileInfoViewModel>();
-            services.AddAutoMapper((cfg) => cfg.AddProfile<AutoMapperProfile>());
-            var buildServiceProvider = services.BuildServiceProvider();
+            _serviceCollection.AddTransient<FilesListViewModel>();
+            _serviceCollection.AddTransient<BaseFileViewModel>();
+            _serviceCollection.AddTransient<DirectoryInfoViewModel>();
+            _serviceCollection.AddTransient<FileInfoViewModel>();
+            _serviceCollection.AddAutoMapper((cfg) => cfg.AddProfile<AutoMapperProfile>());
+            var buildServiceProvider = _serviceCollection.BuildServiceProvider();
 
             IMapper mapper = buildServiceProvider.GetRequiredService<IMapper>();
             var fileService = buildServiceProvider.GetRequiredService<FileService>();
             var thumbnailService = buildServiceProvider.GetRequiredService<ThumbnailService>();
             var hashService = buildServiceProvider.GetRequiredService<HashService>();
             var xmlService = buildServiceProvider.GetRequiredService<XmlConfigService>();
-
-            return services;
+        }
+        public static ServiceCollection GetServiceCollection()
+        {
+            return _serviceCollection;
+            
         }
     }
 }

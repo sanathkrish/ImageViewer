@@ -139,21 +139,21 @@ namespace ImageViewer.ViewModel
             //    pipe.CompareImage(image1, image2).GetAwaiter().GetResult();
             //    Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
             //}
-            var pipe = new FindFacePipe();
-            pipe.Initilize().GetAwaiter().GetResult();
-            var image1 = string.Empty;
-            var image2 = string.Empty;
-            pipe.GetFaces(@"F:\faces\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg").GetAwaiter().GetResult();
-            Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
-            while (true)
-            {
-                Console.WriteLine("Enter first image path:");
-                image1 = Console.ReadLine();
-                pipe.GetFaces(image1).GetAwaiter().GetResult();
-                Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
-            }
+            //var pipe = new FindFacePipe();
+            //pipe.Initilize().GetAwaiter().GetResult();
+            //var image1 = string.Empty;
+            //var image2 = string.Empty;
+            //pipe.GetFaces(@"F:\faces\KMR_6795_17b56eee-affd-4b7e-9cfd-1e18459f2cb4.jpg").GetAwaiter().GetResult();
+            //Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
+            //while (true)
+            //{
+            //    Console.WriteLine("Enter first image path:");
+            //    image1 = Console.ReadLine();
+            //    pipe.GetFaces(image1).GetAwaiter().GetResult();
+            //    Console.WriteLine(pipe.ReadMessage().GetAwaiter().GetResult());
+            //}
 
-            Console.ReadKey();
+            //Console.ReadKey();
             
             // Mapper is now configured and can be used throughout the application 
         }

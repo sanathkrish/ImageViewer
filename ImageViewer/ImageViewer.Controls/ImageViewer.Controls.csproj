@@ -9,7 +9,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Elements\BaseItemView.xaml" />
+    <None Remove="Elements\ExplorerContent.xaml" />
     <None Remove="Elements\ItemView.xaml" />
+    <None Remove="Elements\NavigateBackItemView.xaml" />
     <None Remove="Explorer.xaml" />
     <None Remove="InitialWindow.xaml" />
     <None Remove="Pages\ImageAnalysis.xaml" />
@@ -21,10 +23,19 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />
-    <Folder Include="Navigation\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageViewer.ViewModel\ImageViewer.ViewModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Elements\NavigateBackItemView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Elements\ExplorerContent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Elements\BaseItemView.xaml">

@@ -1,3 +1,6 @@
+using CommunityToolkit.Mvvm.Input;
+using ImageViewer.Controls.Elements;
+using ImageViewer.Service.Interfaces;
 using ImageViewer.ViewModel.Collections;
 using ImageViewer.ViewModel.CustomServiceCollection;
 using ImageViewer.ViewModel.File;
@@ -27,28 +30,46 @@ namespace ImageViewer.Controls
     /// </summary>
     public sealed partial class Explorer : Page
     {
-        private FilesListViewModel _vm;
         public Explorer()
         {
             InitializeComponent();
+            var navigationService = ViewModel.CustomServiceCollection.CustomServiceCollection.ServiceProvider.GetService<INavigationService>();
+            navigationService.RegisterFrame("explorer_content", explorer_content);
+            navigationService.RegisterNavigation("explorer_content", typeof(ExplorerContent));
+            NavigateToPath("F:\\");
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private void NavigateToPath(string path)
         {
-            base.OnNavigatedTo(e); 
-            _vm = CustomServiceCollection.ServiceProvider.GetService<FilesListViewModel>();
-            _vm.InitilizeAsync("F:\\").ConfigureAwait(false);
-            this.DataContext = _vm;
+            //explorer_content.Navigated += (s, e) =>
+            //    {
+            //        var content = e.Content as ExplorerContent;
+            //        content._vm.SelectItemCommand = new RelayCommand<BaseFileViewModel>(item =>
+            //        {
+            //            if (item.IsDirectory)
+            //            {
+            //                NavigateToPath(item.Path);
+            //            }
+            //        });
+            //    };
+            explorer_content.Navigate(typeof(ExplorerContent), path);
+
         }
-        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var item = e.ClickedItem as BaseFileViewModel;
-            if (item != null) { 
-               if(item.IsDirectory)
-                {
-                    _vm.InitilizeAsync(item.Path).ConfigureAwait(false);
-                }
-            }
-        }
+
+
+        //private void GridView_ItemClick(object sender, ItemClickEventArgs e)
+        //{
+        //    var item = e.ClickedItem as BaseFileViewModel;
+        //    if (item != null) { 
+        //       if(item.IsDirectory)
+        //        {
+        //            // _vm.InitilizeAsync(item.Path).ConfigureAwait(false);
+        //            explorer_content.Navigate(typeof(ExplorerContent),item.Path);
+        //            explorer_content.Navigated += (s, e) => 
+        //            {
+        //            };
+        //        }
+        //    }
+        //}
     }
 }

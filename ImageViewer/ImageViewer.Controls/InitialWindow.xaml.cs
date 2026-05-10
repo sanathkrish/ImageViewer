@@ -1,4 +1,7 @@
 using ImageViewer.Controls.Pages;
+using ImageViewer.Service.Interfaces;
+using ImageViewer.ViewModel.CustomServiceCollection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -28,6 +31,13 @@ namespace ImageViewer.Controls
         public InitialWindow()
         {
             InitializeComponent();
+            var navigation = CustomServiceCollection.ServiceProvider.GetService<INavigationService>();
+            if(navigation != null)
+            {
+                navigation.RegisterFrame("main_window", ContentFrame);
+                navigation.RegisterNavigation("main_window", typeof(Explorer));
+                navigation.RegisterNavigation("main_window", typeof(ImageAnalysis));
+            }
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

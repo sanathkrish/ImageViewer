@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ImageViewer.ViewModel.File
 {
@@ -15,6 +16,7 @@ namespace ImageViewer.ViewModel.File
         private FileType _fileType { get; set; }
         private DateTime? _created { get; set; }
         private DateTime? _lastModified { get; set; }
+
 
         public string Name
         {
@@ -41,6 +43,8 @@ namespace ImageViewer.ViewModel.File
             {
                 _fileType = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsDirectory));
+                OnPropertyChanged(nameof(IsFile));
             }
         }
         public DateTime? Created

@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     x:Name="root">
 
-    <StackPanel Orientation="Vertical">
-        <local:BaseItemView DataContext="{x:Bind baseFile}"></local:BaseItemView>
+    <StackPanel Orientation="Vertical" >
+        <local:BaseItemView x:Name="base_item"></local:BaseItemView>
     </StackPanel>
 </UserControl>
