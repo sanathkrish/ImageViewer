@@ -44,7 +44,7 @@ namespace ImageViewer.Controls.Elements
                     stream.Seek(0);
 
                     var bitmap = new BitmapImage();
-                    bitmap.SetSourceAsync(stream).GetAwaiter().GetResult();
+                    bitmap.SetSource(stream);
                     this.ItemImage.Source = bitmap;
                 });
             };

@@ -9,7 +9,7 @@
  xmlns:cc="using:ImageViewer.Controls.Elements"
  xmlns:model="using:ImageViewer.ViewModel.File"
     mc:Ignorable="d">
-
+    <ScrollViewer ViewChanged="ScrollViewer_ViewChanged">
     <Grid>
         <!--<cc:NavigateBackItemView DataContext="{Binding NavigateBack}"  ></cc:NavigateBackItemView>-->
         <GridView ItemsSource="{Binding Data}"
@@ -34,5 +34,6 @@ ItemClick="GridView_ItemClick">
             </GridView.ItemTemplate>
         </GridView>
     </Grid>
-    
+    </ScrollViewer>
+
 </Page>

@@ -59,10 +59,11 @@ namespace ImageViewer.Service.BackgroundWorkers
         {
             if (!IsRunning)
             {
-                Task.Run(() =>
+                Task task = new Task(() =>
                 {
                     Action?.Invoke(input);
                 });
+                task.Start();
             }
         }
 

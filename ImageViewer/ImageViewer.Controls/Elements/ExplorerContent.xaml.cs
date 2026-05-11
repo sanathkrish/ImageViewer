@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -43,6 +44,18 @@ public sealed partial class ExplorerContent : Page
         if(this._vm.SelectItemCommand != null)
         {
             this._vm.SelectItemCommand.Execute(e.ClickedItem as object);
+        }
+    }
+
+
+    private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+    {
+        var sv = (ScrollViewer)sender;
+        double distanceFromBottom = sv.ExtentHeight - sv.VerticalOffset - sv.ViewportHeight;
+
+        if (distanceFromBottom < 100) // threshold in pixels
+        {
+           await _vm.GetNextAsync();
         }
     }
 }

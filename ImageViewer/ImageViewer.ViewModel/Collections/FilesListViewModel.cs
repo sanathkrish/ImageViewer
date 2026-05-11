@@ -105,7 +105,7 @@ namespace ImageViewer.ViewModel.Collections
             }
         }
 
-        public async void GetNextAsync() 
+        public async Task GetNextAsync() 
         {
             this.CurrentPage++;
            await GetFiles(currentPath, CurrentPage, PageSize);

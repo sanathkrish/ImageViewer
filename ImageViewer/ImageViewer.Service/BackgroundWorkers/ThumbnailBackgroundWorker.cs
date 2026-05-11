@@ -113,6 +113,39 @@ namespace ImageViewer.Service.BackgroundWorkers
 
         public async Task<byte[]> CreateThumbnailBytesAsync( string filePath,uint width = 200,uint height=200)
         {
+            var folderPath = Path.GetDirectoryName(filePath);
+            var ff = Path.GetFileName(folderPath);
+            var fileName = Path.GetFileName(filePath);
+            string thumbnailPath;
+            if (ff.StartsWith(".ThumbnailsIC", StringComparison.OrdinalIgnoreCase))
+            {
+                thumbnailPath = filePath;
+            }
+            else
+            {
+             thumbnailPath = Path.Combine(folderPath, ".ThumbnailsIC", fileName);
+            }
+
+            if (Directory.Exists(folderPath) && Path.Exists(thumbnailPath))
+            {
+                var file = await StorageFile.GetFileFromPathAsync(thumbnailPath);
+                if (file != null)
+                {
+                        using var memoryStream = new MemoryStream();
+                        await file.OpenStreamForReadAsync().Result.CopyToAsync(memoryStream);
+                        return memoryStream.ToArray();
+                }
+            } else
+            {
+                try
+                {
+                    Directory.CreateDirectory(Path.Combine(folderPath, ".ThumbnailsIC"));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to create thumbnail folder for {filePath}: {ex.Message}");
+                }
+            }
             // Open file via System.IO
             using FileStream fs =
                 new FileStream(filePath, FileMode.Open, FileAccess.Read);
@@ -161,6 +194,16 @@ namespace ImageViewer.Service.BackgroundWorkers
 
             // Convert stream → byte[]
             byte[] bytes = new byte[output.Size];
+            try
+            {
+                using FileStream outFs = new FileStream(thumbnailPath, FileMode.Create, FileAccess.Write);
+
+                await output.AsStreamForRead().CopyToAsync(outFs);
+            }catch(Exception ex)
+            {
+                Console.WriteLine($"Failed to save thumbnail for {filePath}: {ex.Message}");
+            }
+
 
             await output.ReadAsync(
                 bytes.AsBuffer(),
