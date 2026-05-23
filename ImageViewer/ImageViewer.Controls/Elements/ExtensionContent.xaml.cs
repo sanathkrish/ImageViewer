@@ -1,5 +1,6 @@
-using ImageViewer.Controls.Elements;
-using ImageViewer.Service.Interfaces;
+using ImageViewer.ViewModel.Collections;
+using ImageViewer.ViewModel.CustomServiceCollection;
+using ImageViewer.ViewModel.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -19,25 +20,27 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace ImageViewer.Controls.Pages
+namespace ImageViewer.Controls.Elements
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ImageAnalysis : Page
+    public sealed partial class ExtensionContent : Page
     {
-        public ImageAnalysis()
+        ExtensionCollectionViewModel _vm;
+        public ExtensionContent()
         {
             InitializeComponent();
-            var navigationService = ViewModel.CustomServiceCollection.CustomServiceCollection.ServiceProvider.GetService<INavigationService>();
-            navigationService.RegisterFrame("data_content", data_content);
-            navigationService.RegisterNavigation("data_content", typeof(ExtensionContent));
-            NavigateToPath("H:\\");
         }
 
-        private void NavigateToPath(string path)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            data_content.Navigate(typeof(ExtensionContent), path);
+            base.OnNavigatedTo(e);
+            _vm = CustomServiceCollection.ServiceProvider.GetService<ExtensionCollectionViewModel>();
+            var param = e.Parameter as string;
+            _vm.InitilizeAsync(param);
+            this.DataContext = _vm;
+            _vm.dispatcherQueue = DispatcherQueue;
         }
     }
 }

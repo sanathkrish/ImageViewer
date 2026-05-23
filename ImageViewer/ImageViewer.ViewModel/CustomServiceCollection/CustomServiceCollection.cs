@@ -4,6 +4,7 @@ using ImageViewer.Service.BackgroundWorkers;
 using ImageViewer.Service.File;
 using ImageViewer.ViewModel.AutoMapperSetup;
 using ImageViewer.ViewModel.Collections;
+using ImageViewer.ViewModel.Extensions;
 using ImageViewer.ViewModel.File;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -41,6 +42,7 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddSingleton<ThumbnailService>(new ThumbnailService(new ThumbnailBackgroundWorker()));
             _serviceCollection.AddSingleton<ThumbnailBackgroundWorker>();
             _serviceCollection.AddSingleton<HashService>();
+            _serviceCollection.AddTransient<ExtensionService>();
             _serviceCollection.AddSingleton<XmlConfigService>(provider =>
             {
                 return new XmlConfigService("F:\\.thumbnails_1\\config.xml", 300000);
@@ -50,6 +52,7 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddTransient<BaseFileViewModel>();
             _serviceCollection.AddTransient<DirectoryInfoViewModel>();
             _serviceCollection.AddTransient<FileInfoViewModel>();
+            _serviceCollection.AddTransient<ExtensionCollectionViewModel>();
             _serviceCollection.AddAutoMapper((cfg) => cfg.AddProfile<AutoMapperProfile>());
             var buildServiceProvider = _serviceCollection.BuildServiceProvider();
 

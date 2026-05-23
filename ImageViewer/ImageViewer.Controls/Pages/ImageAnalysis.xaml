@@ -9,6 +9,8 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBlock>Image Analysis</TextBlock>
+        <Frame x:Name="data_content">
+
+        </Frame>
     </Grid>
 </Page>

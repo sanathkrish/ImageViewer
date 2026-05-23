@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="Elements\BaseItemView.xaml" />
     <None Remove="Elements\ExplorerContent.xaml" />
+    <None Remove="Elements\ExtensionContent.xaml" />
     <None Remove="Elements\ItemView.xaml" />
     <None Remove="Elements\NavigateBackItemView.xaml" />
     <None Remove="Explorer.xaml" />
@@ -26,6 +27,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageViewer.ViewModel\ImageViewer.ViewModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Elements\ExtensionContent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Elements\NavigateBackItemView.xaml">

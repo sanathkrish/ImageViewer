@@ -53,7 +53,7 @@ public sealed partial class ExplorerContent : Page
         var sv = (ScrollViewer)sender;
         double distanceFromBottom = sv.ExtentHeight - sv.VerticalOffset - sv.ViewportHeight;
 
-        if (distanceFromBottom < 100) // threshold in pixels
+        if (distanceFromBottom < 200) // threshold in pixels
         {
            await _vm.GetNextAsync();
         }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="ImageViewer.Controls.Elements.ExtensionContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ImageViewer.Controls.Elements"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:model="using:ImageViewer.ViewModel.Extensions"
+    
+    mc:Ignorable="d">
+    <ScrollViewer >
+    <Grid>
+        <!--<cc:NavigateBackItemView DataContext="{Binding NavigateBack}"  ></cc:NavigateBackItemView>-->
+            <GridView ItemsSource="{Binding Extensions}"
+IsItemClickEnabled="True" VerticalAlignment="Stretch" 
+SelectionMode="None">
+
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="model:ExtensionInfoViewModel">
+                    <!--<Image Source="{Binding Path}"
+             Width="150"
+             Height="150"
+             Stretch="UniformToFill"/>-->
+                        <Button DataContext="{x:Bind}" Width="100" Height="100">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="model:ExtensionInfoViewModel">
+                                    <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{x:Bind Extension}" HorizontalTextAlignment="Center" />
+                                        <TextBlock Text="{x:Bind Count}" HorizontalTextAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+    </ScrollViewer>
+</Page>
