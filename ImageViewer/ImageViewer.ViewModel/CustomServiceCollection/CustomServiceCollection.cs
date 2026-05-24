@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ImageViewer.Data;
 using ImageViewer.Service;
 using ImageViewer.Service.BackgroundWorkers;
 using ImageViewer.Service.File;
@@ -6,6 +7,7 @@ using ImageViewer.ViewModel.AutoMapperSetup;
 using ImageViewer.ViewModel.Collections;
 using ImageViewer.ViewModel.Extensions;
 using ImageViewer.ViewModel.File;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -38,11 +40,18 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
         }
         public static void Initilize()
         {
+            var dbServiceDescription = new SqlLiteSetupService();
+            dbServiceDescription.Initilize();
+            dbServiceDescription.CreateTables().GetAwaiter().GetResult();
+            
             _serviceCollection.AddLogging(builder =>
             {
                 //builder.Configure((da)=>);
                 builder.SetMinimumLevel(LogLevel.Information);
             });
+            _serviceCollection.AddSingleton<SqliteConnection>(dbServiceDescription.CreateConnection());
+            _serviceCollection.AddTransient<FileDataService>();
+
             _serviceCollection.AddSingleton<FileService>();
             _serviceCollection.AddSingleton<ThumbnailService>(new ThumbnailService(new ThumbnailBackgroundWorker()));
             _serviceCollection.AddSingleton<ThumbnailBackgroundWorker>();

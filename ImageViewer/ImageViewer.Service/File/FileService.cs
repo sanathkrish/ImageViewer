@@ -16,6 +16,7 @@ namespace ImageViewer.Service.File
             var paginationDataResponsefiles = new PaginationDataResponse<BaseFile>();
             if (request == null)
             {
+               var t =  DriveInfo.GetDrives()[0].DriveType;
                 throw new ArgumentNullException(nameof(request));
             }
             if (Directory.Exists(request.Filter))
