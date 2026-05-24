@@ -54,6 +54,9 @@ namespace ImageViewer.Controls
                 case "imageanalysis":
                     ContentFrame.Navigate(typeof(ImageAnalysis));
                     break;
+                case "duplicatefiles":
+                    ContentFrame.Navigate(typeof(DuplicateFile));
+                    break;
 
             }
         }

@@ -31,8 +31,10 @@ namespace ImageViewer.Controls.Pages
             InitializeComponent();
             var navigationService = ViewModel.CustomServiceCollection.CustomServiceCollection.ServiceProvider.GetService<INavigationService>();
             navigationService.RegisterFrame("data_content", data_content);
+            navigationService.RegisterFrame("details_content", details_content);
             navigationService.RegisterNavigation("data_content", typeof(ExtensionContent));
-            NavigateToPath("H:\\");
+            navigationService.RegisterNavigation("details_content", typeof(ExtensionInfoDetails));
+            NavigateToPath("F:\\");
         }
 
         private void NavigateToPath(string path)

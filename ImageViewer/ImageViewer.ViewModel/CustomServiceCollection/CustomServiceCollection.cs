@@ -31,6 +31,11 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
                 return _serviceProvider;
             }
         }
+
+        public static T GetService<T>()
+        {
+            return ServiceProvider.GetRequiredService<T>();
+        }
         public static void Initilize()
         {
             _serviceCollection.AddLogging(builder =>
@@ -43,6 +48,7 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddSingleton<ThumbnailBackgroundWorker>();
             _serviceCollection.AddSingleton<HashService>();
             _serviceCollection.AddTransient<ExtensionService>();
+            _serviceCollection.AddTransient<DuplicateImageService>();
             _serviceCollection.AddSingleton<XmlConfigService>(provider =>
             {
                 return new XmlConfigService("F:\\.thumbnails_1\\config.xml", 300000);

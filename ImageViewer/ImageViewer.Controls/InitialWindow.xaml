@@ -18,6 +18,7 @@
         <NavigationView.MenuItems>
             <NavigationViewItem Content="Explorer" Tag="Explorer" Icon="Home"/>
             <NavigationViewItem Content="ImageAnalysis" Tag="ImageAnalysis" Icon="Folder"/>
+            <NavigationViewItem Content="DuplicateFiles" Tag="DuplicateFiles" Icon="Folder"/>
         </NavigationView.MenuItems>
 
         <!-- RIGHT SIDE CONTENT -->

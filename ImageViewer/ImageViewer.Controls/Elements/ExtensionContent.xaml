@@ -14,7 +14,8 @@
         <!--<cc:NavigateBackItemView DataContext="{Binding NavigateBack}"  ></cc:NavigateBackItemView>-->
             <GridView ItemsSource="{Binding Extensions}"
 IsItemClickEnabled="True" VerticalAlignment="Stretch" 
-SelectionMode="None">
+SelectionMode="None"
+                      ItemClick="GridView_ItemClick">
 
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -28,7 +29,7 @@ SelectionMode="None">
              Width="150"
              Height="150"
              Stretch="UniformToFill"/>-->
-                        <Button DataContext="{x:Bind}" Width="100" Height="100">
+                        <Button DataContext="{x:Bind}" Width="100" Height="100" Click="Button_Click">
                             <Button.ContentTemplate>
                                 <DataTemplate x:DataType="model:ExtensionInfoViewModel">
                                     <StackPanel Orientation="Vertical">

@@ -18,7 +18,7 @@ namespace ImageViewer.ViewModel.Extensions
             {
                 if (Extension == extension.Extension)
                 {
-                    Extensions.Add(extension.Extension);
+                    Extensions.Add(extension.Path);
                     Count++;
                 }
             });

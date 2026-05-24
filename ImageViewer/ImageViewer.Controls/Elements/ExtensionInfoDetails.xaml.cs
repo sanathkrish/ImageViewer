@@ -1,5 +1,3 @@
-using ImageViewer.Service.Interfaces;
-using ImageViewer.ViewModel.Collections;
 using ImageViewer.ViewModel.CustomServiceCollection;
 using ImageViewer.ViewModel.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,11 +24,10 @@ namespace ImageViewer.Controls.Elements
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ExtensionContent : Page
+    public sealed partial class ExtensionInfoDetails : Page
     {
-        ExtensionCollectionViewModel _vm;
-        INavigationService _navigationService;
-        public ExtensionContent()
+        private ExtensionInfoViewModel _vm;
+        public ExtensionInfoDetails()
         {
             InitializeComponent();
         }
@@ -38,23 +35,9 @@ namespace ImageViewer.Controls.Elements
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            _vm = CustomServiceCollection.ServiceProvider.GetService<ExtensionCollectionViewModel>();
-            _navigationService = CustomServiceCollection.ServiceProvider.GetService<INavigationService>();
-            var param = e.Parameter as string;
-            _vm.InitilizeAsync(param);
-            this.DataContext = _vm;
-            _vm.dispatcherQueue = DispatcherQueue;
-        }
-
-        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var context = (sender as Button).DataContext as ExtensionInfoViewModel;
-            _navigationService.Navigate("details_content", nameof(ExtensionInfoDetails), context);
-
+            _vm = CustomServiceCollection.ServiceProvider.GetService<ExtensionInfoViewModel>();
+            var param = e.Parameter as ExtensionInfoViewModel;
+            this.DataContext = _vm = param;
         }
     }
 }

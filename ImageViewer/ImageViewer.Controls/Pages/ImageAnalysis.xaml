@@ -9,8 +9,14 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Frame x:Name="data_content">
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="500"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Frame x:Name="data_content" Grid.Column="0">
 
         </Frame>
+        <Frame x:Name="details_content" Width="1000" Grid.Column="1" ScrollViewer.HorizontalScrollMode="Auto"></Frame>
     </Grid>
 </Page>

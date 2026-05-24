@@ -11,22 +11,36 @@
     <None Remove="Elements\BaseItemView.xaml" />
     <None Remove="Elements\ExplorerContent.xaml" />
     <None Remove="Elements\ExtensionContent.xaml" />
+    <None Remove="Elements\ExtensionInfoDetails.xaml" />
     <None Remove="Elements\ItemView.xaml" />
     <None Remove="Elements\NavigateBackItemView.xaml" />
     <None Remove="Explorer.xaml" />
     <None Remove="InitialWindow.xaml" />
+    <None Remove="Pages\DuplicateFile.xaml" />
     <None Remove="Pages\ImageAnalysis.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
+    <PackageReference Include="SQLite" Version="3.13.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageViewer.ViewModel\ImageViewer.ViewModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\DuplicateFile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Elements\ExtensionInfoDetails.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Elements\ExtensionContent.xaml">
