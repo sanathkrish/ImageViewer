@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="ImageViewer.Controls.NavigationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ImageViewer.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!-- Top Header Bar -->
+    <Grid Background="#151B2D" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer>
+            <StackPanel Spacing="4">
+                <NavigationViewItem Icon="Home" Content="Overview" IsSelected="False"/>
+
+                <TextBlock Text="CATEGORIES" Margin="12,16,12,8" FontSize="11" Foreground="#6B7280" FontWeight="SemiBold"/>
+
+                <NavigationViewItem Content="All Files" Tag="1,56,435">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8B7;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Duplicate Files" Tag="8,742" IsSelected="True" Background="#1E293B">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8C8;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Duplicate Images" Tag="4,538">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEB9F;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Similar Images" Tag="2,138">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8B9;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Blurry Images" Tag="1,023">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7BA;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Large Files" Tag="1,203">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8A5;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Empty Files" Tag="320">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7C3;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <TextBlock Text="OTHER" Margin="12,16,12,8" FontSize="11" Foreground="#6B7280" FontWeight="SemiBold"/>
+                <NavigationViewItem Icon="Clock" Content="Recent Files"/>
+                <NavigationViewItem Icon="BlockContact" Content="Ignored Folders"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Bottom Disk Usage -->
+        <StackPanel Grid.Row="1" Spacing="8" Margin="0,16,0,0">
+            <TextBlock Text="Local Disk (C:)" Foreground="White" FontSize="12"/>
+            <TextBlock Text="Scanning..." Foreground="#8B93A7" FontSize="11"/>
+            <ProgressBar Value="87" Foreground="#3B82F6"/>
+            <TextBlock Text="1.2 TB / 1.8 TB" FontSize="11" Foreground="#8B93A7"/>
+            <TextBlock Text="Files Scanned: 1,36,452" FontSize="11" Foreground="#8B93A7"/>
+            <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,12,0,0">
+                <Button Style="{StaticResource TextBlockButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE713;" FontSize="14"/>
+                        <TextBlock Text="Settings"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource TextBlockButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE946;" FontSize="14"/>
+                        <TextBlock Text="About"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
+</UserControl>

@@ -8,9 +8,18 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+               
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="StatCardStyle" TargetType="Border">
+                <Setter Property="Background" Value="#1E293B"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="#2D3748"/>
+            </Style>
             <!-- Other app resources here -->
         </ResourceDictionary>
+        
     </Application.Resources>
 </Application>

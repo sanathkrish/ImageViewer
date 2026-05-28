@@ -7,6 +7,7 @@ using ImageViewer.ViewModel.AutoMapperSetup;
 using ImageViewer.ViewModel.Collections;
 using ImageViewer.ViewModel.Extensions;
 using ImageViewer.ViewModel.File;
+using ImageViewer.ViewModel.Views;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -68,6 +69,8 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddTransient<DirectoryInfoViewModel>();
             _serviceCollection.AddTransient<FileInfoViewModel>();
             _serviceCollection.AddTransient<ExtensionCollectionViewModel>();
+            _serviceCollection.AddTransient<NavigationViewModel>();
+            _serviceCollection.AddTransient<NavigationItemViewModel>();
             _serviceCollection.AddAutoMapper((cfg) => cfg.AddProfile<AutoMapperProfile>());
             var buildServiceProvider = _serviceCollection.BuildServiceProvider();
 

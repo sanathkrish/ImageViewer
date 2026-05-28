@@ -16,8 +16,10 @@
     <None Remove="Elements\NavigateBackItemView.xaml" />
     <None Remove="Explorer.xaml" />
     <None Remove="InitialWindow.xaml" />
+    <None Remove="NavigationControl.xaml" />
     <None Remove="Pages\DuplicateFile.xaml" />
     <None Remove="Pages\ImageAnalysis.xaml" />
+    <None Remove="UI\NavigationItem.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
@@ -32,6 +34,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageViewer.ViewModel\ImageViewer.ViewModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\NavigationItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="NavigationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\DuplicateFile.xaml">
