@@ -21,11 +21,41 @@ namespace ImageViewer.ViewModel.Views
 
         public override Task InitilizeAsync<String>(String data)
         {
-            _items.Add(new NavigationItemViewModel() 
+            Items.Add(new NavigationItemViewModel() 
             {
-                Name = "Home",
+                Name = "All Files",
                 UseStandard = true,
                 NavigationCommand = new RelayCommand(async () => await Navigate("main_window", "HomePage", null)) });
+            Items.Add(new NavigationItemViewModel()
+            {
+                Name = "Duplicate Files",
+                UseStandard = true,
+                NavigationCommand = new RelayCommand(async () => await Navigate("main_window", "Explorer", null))
+            });
+            Items.Add(new NavigationItemViewModel()
+            {
+                Name = "Duplicate Images",
+                UseStandard = true,
+                NavigationCommand = new RelayCommand(async () => await Navigate("main_window", "ImageAnalysis", null))
+            });
+            Items.Add(new NavigationItemViewModel()
+            {
+                Name = "Similar Images",
+                UseStandard = true,
+                NavigationCommand = new RelayCommand(async () => await Navigate("main_window", "HomePage", null))
+            });
+            Items.Add(new NavigationItemViewModel()
+            {
+                Name = "Large Files",
+                UseStandard = true,
+                NavigationCommand = new RelayCommand(async () => await Navigate("main_window", "HomePage", null))
+            });
+            Items.Add(new NavigationItemViewModel()
+            {
+                Name = "Empty Files",
+                UseStandard = true,
+                NavigationCommand = new RelayCommand(async () => await Navigate("main_window", "HomePage", null))
+            });
             return base.InitilizeAsync(data);
         }
         private async Task Navigate(string frame,string navigation,object parameters)

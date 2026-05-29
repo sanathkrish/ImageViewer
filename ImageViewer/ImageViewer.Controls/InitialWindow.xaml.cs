@@ -1,4 +1,5 @@
 using ImageViewer.Controls.Pages;
+using ImageViewer.Controls.UI;
 using ImageViewer.Service.Interfaces;
 using ImageViewer.ViewModel.CustomServiceCollection;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,11 +29,16 @@ namespace ImageViewer.Controls
     /// </summary>
     public sealed partial class InitialWindow : Window
     {
+        private INavigationService _navigationService;
         public InitialWindow()
         {
             InitializeComponent();
-          
+            _navigationService = CustomServiceCollection.GetService<INavigationService>();
+            _navigationService.RegisterFrame("main_window", main_window);
+            _navigationService.RegisterNavigation("main_window", typeof(MainLandingPage));
+            _navigationService.Navigate("main_window", "MainLandingPage", null);
         }
+
 
         
     }

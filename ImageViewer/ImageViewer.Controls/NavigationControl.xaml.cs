@@ -32,10 +32,11 @@ namespace ImageViewer.Controls
             _vm = CustomServiceCollection.ServiceProvider.GetService<NavigationViewModel>();
             if (_vm != null)
             {
-                //_vm.RegisterFrame("main_window", ContentFrame);
                 _vm.RegisterNavigation("main_window", typeof(Explorer));
                 _vm.RegisterNavigation("main_window", typeof(ImageAnalysis));
             }
+            _vm.InitilizeAsync<String>(null).GetAwaiter().GetResult();
+            DataContext = _vm;
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

@@ -22,10 +22,25 @@ namespace ImageViewer.Controls.UI
     public sealed partial class NavigationItem : UserControl
     {
         public NavigationItemViewModel _vm;
-        public NavigationItem(NavigationItemViewModel vm)
+        public NavigationItemViewModel vm
+        {
+            get
+            {
+                return _vm  ;
+            }
+            set { _vm = value; }
+        }
+        //public static readonly DependencyProperty VmProperty = DependencyProperty.Register("Vm", typeof(NavigationItemViewModel), typeof(NavigationItem), new PropertyMetadata(null));
+        public NavigationItem()
         {
             InitializeComponent();
-            _vm = vm;
+            DataContextChanged += NavigationItem_DataContextChanged;
+
+        }
+
+        private void NavigationItem_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            vm = args.NewValue as NavigationItemViewModel;
         }
     }
 }

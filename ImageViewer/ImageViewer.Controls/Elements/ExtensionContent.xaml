@@ -13,7 +13,7 @@
     <Grid>
         <!--<cc:NavigateBackItemView DataContext="{Binding NavigateBack}"  ></cc:NavigateBackItemView>-->
             <GridView ItemsSource="{Binding Extensions}"
-IsItemClickEnabled="True" VerticalAlignment="Stretch" 
+IsItemClickEnabled="True" 
 SelectionMode="None"
                       ItemClick="GridView_ItemClick">
 

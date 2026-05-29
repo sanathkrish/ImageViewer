@@ -19,6 +19,8 @@
     <None Remove="NavigationControl.xaml" />
     <None Remove="Pages\DuplicateFile.xaml" />
     <None Remove="Pages\ImageAnalysis.xaml" />
+    <None Remove="UI\FileClassificationTiles.xaml" />
+    <None Remove="UI\MainLandingPage.xaml" />
     <None Remove="UI\NavigationItem.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +36,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageViewer.ViewModel\ImageViewer.ViewModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\MainLandingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UI\FileClassificationTiles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UI\NavigationItem.xaml">

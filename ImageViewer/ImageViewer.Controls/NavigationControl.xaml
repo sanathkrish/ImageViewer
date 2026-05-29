@@ -6,10 +6,12 @@
     xmlns:local="using:ImageViewer.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls ="using:ImageViewer.Controls.UI"
+    xmlns:models="using:ImageViewer.ViewModel.Views"
     mc:Ignorable="d">
 
     <!-- Top Header Bar -->
-    <Grid Background="#151B2D" >
+    <Grid  >
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -17,7 +19,25 @@
 
         <ScrollViewer>
             <StackPanel Spacing="4">
-                <NavigationViewItem Icon="Home" Content="Overview" IsSelected="False"/>
+                <ListView ItemsSource="{Binding Items}" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:NavigationItemViewModel">
+                            <controls:NavigationItem DataContext="{Binding}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    
+                </ListView>
+                <!--<NavigationView MenuItemsSource="{Binding Items}"  IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            PaneDisplayMode="Left">
+                    <NavigationView.MenuItemTemplate>
+                        <DataTemplate x:DataType="models:NavigationItemViewModel">
+                           <controls:NavigationItem DataContext="{Binding}"/>
+                        </DataTemplate>
+                    </NavigationView.MenuItemTemplate>
+                    
+                </NavigationView>-->
+                <!--<NavigationViewItem Icon="Home" Content="Overview" IsSelected="False"/>
 
                 <TextBlock Text="CATEGORIES" Margin="12,16,12,8" FontSize="11" Foreground="#6B7280" FontWeight="SemiBold"/>
 
@@ -59,11 +79,11 @@
 
                 <TextBlock Text="OTHER" Margin="12,16,12,8" FontSize="11" Foreground="#6B7280" FontWeight="SemiBold"/>
                 <NavigationViewItem Icon="Clock" Content="Recent Files"/>
-                <NavigationViewItem Icon="BlockContact" Content="Ignored Folders"/>
+                <NavigationViewItem Icon="BlockContact" Content="Ignored Folders"/>-->
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Bottom Disk Usage -->
+        <!-- Bottom Disk Usage --><!--
         <StackPanel Grid.Row="1" Spacing="8" Margin="0,16,0,0">
             <TextBlock Text="Local Disk (C:)" Foreground="White" FontSize="12"/>
             <TextBlock Text="Scanning..." Foreground="#8B93A7" FontSize="11"/>
@@ -84,7 +104,7 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
-        </StackPanel>
+        </StackPanel>-->
     </Grid>
 
 </UserControl>

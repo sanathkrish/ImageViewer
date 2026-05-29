@@ -7,19 +7,35 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converters="using:ImageViewer.Controls.ValueConverters"
+    xmlns:vm="using:ImageViewer.ViewModel.Views"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Converters:BoolToVisibilityValueConverter x:Key="BoolToVisibilityValueConverter"></Converters:BoolToVisibilityValueConverter>
     </UserControl.Resources>
     <Grid>
-        <StackPanel Orientation="Horizontal" Spacing="12" Margin="12" Visibility="{Binding UseStandard, Converter={StaticResource BoolToVisibilityValueConverter}}">
-            <!--<FontIcon Glyph="{Binding Icon}" FontSize="16" Foreground="White"/>-->
-            <TextBlock Text="{Binding Name}" FontSize="14" Foreground="White"/>
-        </StackPanel>
+        <NavigationViewItem>
+            <NavigationViewItem.Icon>
+                <FontIcon Glyph="&#xE8B7;"/>
+            </NavigationViewItem.Icon>
+            <NavigationViewItem.ContentTemplate>
+                <DataTemplate>
+                    <StackPanel x:Name="ContextMenu" Visibility="{ Binding UseStandard, Converter={StaticResource BoolToVisibilityValueConverter}}">
+                        <Button Width="240" Command="{Binding NavigationCommand}">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontSize="14" Foreground="Black" >
+                                    </TextBlock>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                      
+                    </StackPanel>
+                </DataTemplate>
+            </NavigationViewItem.ContentTemplate>
+        </NavigationViewItem>
         
-        <StackPanel x:Name="ContextMenu" Visibility="{Binding UseCustom, Converter={StaticResource BoolToVisibilityValueConverter}}">
-            <TextBlock Text="{Binding Name}" FontSize="14" Foreground="White"/>
-        </StackPanel>
+        
+       
 
     </Grid>
 </UserControl>

@@ -22,10 +22,10 @@ namespace ImageViewer.ViewModel.Views
         private string _tag;
         public string Tag { get { return _tag; } set { _tag = value; OnPropertyChanged(); } }
         private bool _useStandard;
-        public bool UseStandard { get { return _useStandard; } set { _useStandard = value;UseCustom = !value ; OnPropertyChanged(); } }
+        public bool UseStandard { get { return _useStandard; } set { _useStandard = value;  OnPropertyChanged(); } }
 
         private bool _useCustom;
-        public bool UseCustom { get { return _useCustom; } set { _useCustom  = value; UseStandard = !value; OnPropertyChanged(); }  }
+        public bool UseCustom { get { return _useCustom; } set { _useCustom  = value; OnPropertyChanged(); }  }
 
         private RelayCommand _navigationCommand;
         public RelayCommand NavigationCommand { get { return _navigationCommand; } set { _navigationCommand = value; this.OnPropertyChanged(); } }
