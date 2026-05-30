@@ -15,8 +15,7 @@ namespace ImageViewer.Service.File
         public ThumbnailService(ThumbnailBackgroundWorker worker)
         {
             _thumbnailBackgroundWorker = worker;
-             _thumbnailBackgroundWorker.Initialize();
-             _thumbnailBackgroundWorker.Run(default);
+            // Do not start background worker in constructor; startup should be controlled by the host.
         }
 
 
@@ -29,8 +28,22 @@ namespace ImageViewer.Service.File
                 ImageCallback = callBack
             };
             _thumbnailBackgroundWorker.AddToQueue(thumbnailInfo);
+        }
+
+        // Explicit start method so DI/bootstrap can control worker lifecycle
+        public void StartWorker()
+        {
             _thumbnailBackgroundWorker.Initialize();
-            _thumbnailBackgroundWorker.Run(null);
+            _thumbnailBackgroundWorker.Run(default);
+        }
+
+        public void StopWorker()
+        {
+            try
+            {
+                _thumbnailBackgroundWorker.Stop();
+            }
+            catch { }
         }
     }
 }

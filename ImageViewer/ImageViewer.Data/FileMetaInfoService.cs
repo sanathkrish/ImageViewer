@@ -94,5 +94,18 @@ namespace ImageViewer.Data
             var count = (long)await command.ExecuteScalarAsync();
             return count > 0;
         }
+
+        public async Task AddOrUpdateFileMetaInfo(FileMetaInfo fileMetaInfo)
+        {
+            var exists = await RecordExistsForFileId(fileMetaInfo.FileId);
+            if (exists)
+            {
+                await UpdateFileMetaInfo(fileMetaInfo);
+            }
+            else
+            {
+                await AddFileMetaInfo(fileMetaInfo);
+            }
+        }
     }
 }

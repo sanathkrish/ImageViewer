@@ -89,5 +89,35 @@ namespace ImageViewer.Data
             var count = (long)await command.ExecuteScalarAsync();
             return count > 0;
         }
+
+        public async Task<int> GetDriverIdByPathAsync(string path)
+        {
+            using var command = _connection.CreateCommand();
+            command.CommandText = "SELECT Id FROM DRIVERS WHERE lower(Path) = lower(@path) LIMIT 1;";
+            command.Parameters.AddWithValue("@path", path);
+            var res = await command.ExecuteScalarAsync();
+            if (res == null || res == DBNull.Value) return -1;
+            return Convert.ToInt32(res);
+        }
+
+        public async Task<int> CreateDriverAsync(DriverInfo driver)
+        {
+            using var command = _connection.CreateCommand();
+            command.CommandText = @"
+                INSERT INTO DRIVERS (Name, Path, Type, DateAdded, TotalSize, FreeSpace)
+                VALUES (@name, @path, @type, @dateAdded, @totalSize, @freeSpace);
+            ";
+            command.Parameters.AddWithValue("@name", driver.Name);
+            command.Parameters.AddWithValue("@path", driver.Path);
+            command.Parameters.AddWithValue("@type", driver.Type);
+            command.Parameters.AddWithValue("@dateAdded", driver.DateAdded ?? DateTime.UtcNow);
+            command.Parameters.AddWithValue("@totalSize", driver.TotalSize);
+            command.Parameters.AddWithValue("@freeSpace", driver.FreeSpace);
+            await command.ExecuteNonQueryAsync();
+            using var idCmd = _connection.CreateCommand();
+            idCmd.CommandText = "SELECT last_insert_rowid();";
+            var last = await idCmd.ExecuteScalarAsync();
+            return Convert.ToInt32(last);
+        }
     }
 }

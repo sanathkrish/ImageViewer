@@ -3,8 +3,10 @@ using ImageViewer.Data;
 using ImageViewer.Service;
 using ImageViewer.Service.BackgroundWorkers;
 using ImageViewer.Service.File;
+using ImageViewer.Service.Interfaces;
 using ImageViewer.ViewModel.AutoMapperSetup;
 using ImageViewer.ViewModel.Collections;
+using ImageViewer.ViewModel.Events;
 using ImageViewer.ViewModel.Extensions;
 using ImageViewer.ViewModel.File;
 using ImageViewer.ViewModel.Views;
@@ -41,32 +43,65 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
         }
         public static void Initilize()
         {
+            // Initialize and prepare SQLite database and tables synchronously on startup.
             var dbServiceDescription = new SqlLiteSetupService();
             dbServiceDescription.Initilize();
             dbServiceDescription.CreateTables().GetAwaiter().GetResult();
-            
-            _serviceCollection.AddLogging(builder =>
-            {
-                //builder.Configure((da)=>);
-                builder.SetMinimumLevel(LogLevel.Information);
-            });
-            _serviceCollection.AddSingleton<SqliteConnection>(dbServiceDescription.CreateConnection());
-            _serviceCollection.AddTransient<FileDataService>();
 
-            _serviceCollection.AddSingleton<FileService>();
-            _serviceCollection.AddSingleton<ThumbnailService>(new ThumbnailService(new ThumbnailBackgroundWorker()));
-            _serviceCollection.AddSingleton<ThumbnailBackgroundWorker>();
+            // Logging
+            _serviceCollection.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Information));
+
+            // SQLite registration
+            _serviceCollection.AddSingleton(dbServiceDescription);
+            // Use scoped SqliteConnection so each scope gets its own connection instance
+            _serviceCollection.AddScoped<SqliteConnection>(provider => provider.GetRequiredService<SqlLiteSetupService>().CreateConnection());
+
+            // Data layer services
+            _serviceCollection.AddTransient<FileDataService>();
+            _serviceCollection.AddTransient<DriverDataService>();
+            _serviceCollection.AddTransient<FileMetaInfoService>();
+
+            // Core services
+            // FileService depends on data access and benefits from scoped lifetime
+            _serviceCollection.AddScoped<FileService>();
             _serviceCollection.AddSingleton<HashService>();
+
+            // Background workers and thumbnail service
+            _serviceCollection.AddSingleton<ThumbnailBackgroundWorker>();
+            _serviceCollection.AddSingleton<ThumbnailService>();
+
+            // File utilities
             _serviceCollection.AddTransient<ExtensionService>();
             _serviceCollection.AddTransient<DuplicateImageService>();
-            _serviceCollection.AddTransient<DriverDataService>();
-            _serviceCollection.AddTransient<FileDataService>();
-            _serviceCollection.AddTransient<FileMetaInfoService>();
-            _serviceCollection.AddSingleton<XmlConfigService>(provider =>
-            {
-                return new XmlConfigService("F:\\.thumbnails_1\\config.xml", 300000);
-            });
 
+            // Ensure unreferenced / auxiliary classes are also registered so they are retained
+            _serviceCollection.AddTransient<DuplicateFileCollection>();
+            _serviceCollection.AddTransient<DataCollectionViewModel>();
+            _serviceCollection.AddTransient<DuplicateFileInfoViewModel>();
+            _serviceCollection.AddTransient<ExtensionInfoViewModel>();
+            _serviceCollection.AddTransient<NavigateBackItemViewModel>();
+            _serviceCollection.AddTransient<BaseItemViewModel>();
+
+            // Background pipes and scan helpers
+            _serviceCollection.AddTransient<FindFacePipe>();
+            _serviceCollection.AddTransient<ImageComparisionPipe>();
+            _serviceCollection.AddTransient<ScanCompleteDrive>();
+
+            // Scan UI viewmodel
+            _serviceCollection.AddTransient<ImageViewer.ViewModel.File.ScanDriveViewModel>();
+
+            // Event aggregator (use existing singleton instance)
+            _serviceCollection.AddSingleton<EventAggreator>(provider => EventAggreator.Instance);
+
+            // XML config service - path can be overridden by environment variable IMAGEVIEWER_CONFIG_PATH
+            var xmlPath = Environment.GetEnvironmentVariable("IMAGEVIEWER_CONFIG_PATH");
+            if (string.IsNullOrEmpty(xmlPath))
+            {
+                xmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".thumbnails_1", "config.xml");
+            }
+            _serviceCollection.AddSingleton<XmlConfigService>(provider => new XmlConfigService(xmlPath, 300000));
+
+            // ViewModels and collections
             _serviceCollection.AddTransient<FilesListViewModel>();
             _serviceCollection.AddTransient<BaseFileViewModel>();
             _serviceCollection.AddTransient<DirectoryInfoViewModel>();
@@ -76,14 +111,20 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddTransient<NavigationItemViewModel>();
             _serviceCollection.AddTransient<FileClassificationTileCollection>();
             _serviceCollection.AddTransient<FileClassificationTileViewModel>();
-            _serviceCollection.AddAutoMapper((cfg) => cfg.AddProfile<AutoMapperProfile>());
-            var buildServiceProvider = _serviceCollection.BuildServiceProvider();
 
-            IMapper mapper = buildServiceProvider.GetRequiredService<IMapper>();
-            var fileService = buildServiceProvider.GetRequiredService<FileService>();
-            var thumbnailService = buildServiceProvider.GetRequiredService<ThumbnailService>();
-            var hashService = buildServiceProvider.GetRequiredService<HashService>();
-            var xmlService = buildServiceProvider.GetRequiredService<XmlConfigService>();
+            // AutoMapper
+            _serviceCollection.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfile>());
+
+            // Build provider once after all registrations and perform post-start actions
+            _serviceProvider = _serviceCollection.BuildServiceProvider();
+
+            // Start background worker via ThumbnailService
+            try
+            {
+                var thumbnailService = _serviceProvider.GetService<ThumbnailService>();
+                thumbnailService?.StartWorker();
+            }
+            catch { }
         }
         public static ServiceCollection GetServiceCollection()
         {

@@ -31,6 +31,47 @@ namespace ImageViewer.Data
             await command.ExecuteNonQueryAsync();
         }
 
+        public async Task<int> AddFileAndGetIdAsync(int driverId, string name, string path, long size, DateTime dateAdded, DateTime? modifiedDate = null, string hash = null)
+        {
+            using var command = _connection.CreateCommand();
+            command.CommandText = @"
+                INSERT INTO Files (DriverId, Name, Path, Size, DateAdded, ModifiedDate, Hash)
+                VALUES (@driverId, @name, @path, @size, @dateAdded, @modifiedDate, @hash);";
+            command.Parameters.AddWithValue("@driverId", driverId);
+            command.Parameters.AddWithValue("@name", name);
+            command.Parameters.AddWithValue("@path", path);
+            command.Parameters.AddWithValue("@size", size);
+            command.Parameters.AddWithValue("@dateAdded", dateAdded);
+            command.Parameters.AddWithValue("@modifiedDate", modifiedDate.HasValue ? (object)modifiedDate.Value : DBNull.Value);
+            command.Parameters.AddWithValue("@hash", hash ?? (object)DBNull.Value);
+            await command.ExecuteNonQueryAsync();
+            using var idCmd = _connection.CreateCommand();
+            idCmd.CommandText = "SELECT last_insert_rowid();";
+            var last = await idCmd.ExecuteScalarAsync();
+            return Convert.ToInt32(last);
+        }
+
+        public async Task<int> GetFileIdByPathAsync(string path)
+        {
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = "SELECT Id FROM Files WHERE lower(Path) = lower(@path) LIMIT 1;";
+            cmd.Parameters.AddWithValue("@path", path);
+            var res = await cmd.ExecuteScalarAsync();
+            if (res == null || res == DBNull.Value) return -1;
+            return Convert.ToInt32(res);
+        }
+
+        public async Task<int> GetFileIdByHashAsync(string hash)
+        {
+            if (string.IsNullOrEmpty(hash)) return -1;
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = "SELECT Id FROM Files WHERE Hash = @hash LIMIT 1;";
+            cmd.Parameters.AddWithValue("@hash", hash);
+            var res = await cmd.ExecuteScalarAsync();
+            if (res == null || res == DBNull.Value) return -1;
+            return Convert.ToInt32(res);
+        }
+
         public async Task<List<FileRecord>> GetAllFilesAsync(string driverId)
         {
             var files = new List<FileRecord>();

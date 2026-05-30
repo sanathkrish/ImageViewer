@@ -14,10 +14,10 @@ namespace ImageViewer.Controls
     {
         public static void InitilizeApp()
         {
-            ViewModel.CustomServiceCollection.CustomServiceCollection.Initilize();
             var _ = ViewModel.CustomServiceCollection.CustomServiceCollection.GetServiceCollection();
             _.AddTransient<BaseItemView> ();
             _.AddSingleton<INavigationService, NavigationService>();
+            ViewModel.CustomServiceCollection.CustomServiceCollection.Initilize();
         }
 
     }

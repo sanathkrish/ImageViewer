@@ -18,7 +18,10 @@ namespace ImageViewer.Service.BackgroundWorkers
         public DoWork<T> Action { get; set; }
         public Interceptor IAction { get; set; }
         public Notify<T> NAction { get; set; }
-        protected bool IsRunning { get; set; }
+        // Indicates whether the worker loop should keep running.
+        // Volatile ensures changes made in one thread are visible to others.
+        protected volatile bool IsRunning;
+        private Task _currentTask;
         public CustomBackgroundWorker() : base(() => { })
         {
         }
@@ -49,22 +52,38 @@ namespace ImageViewer.Service.BackgroundWorkers
         {
             if (!IsRunning)
             {
-            Action = DoWorkAction;
-            IAction = InterceptorAction;
-            NAction = NotifyAction;
+                Action = DoWorkAction;
+                IAction = InterceptorAction;
+                NAction = NotifyAction;
             }
         }
 
+        // Start the worker task. Sets IsRunning and tracks the running Task.
         public void Run(T input)
         {
-            if (!IsRunning)
+            if (IsRunning)
+                return;
+
+            IsRunning = true;
+
+            _currentTask = Task.Run(() =>
             {
-                Task task = new Task(() =>
+                try
                 {
                     Action?.Invoke(input);
-                });
-                task.Start();
-            }
+                }
+                finally
+                {
+                    // Ensure flag is cleared when the work finishes.
+                    IsRunning = false;
+                }
+            });
+        }
+
+        // Request the worker to stop. Implementations should check IsRunning and exit promptly.
+        public virtual void Stop()
+        {
+            IsRunning = false;
         }
 
     }
