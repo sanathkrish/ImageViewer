@@ -81,5 +81,14 @@ namespace ImageViewer.Data
             var rowsAffected = await command.ExecuteNonQueryAsync();
             return rowsAffected > 0;
         }
+
+        public async Task<bool> RecordExistsForPath(string path)
+        {
+            using var command = _connection.CreateCommand();
+            command.CommandText = "SELECT COUNT(1) FROM Files WHERE lower(Path) = lower(@path)";
+            command.Parameters.AddWithValue("@path", path);
+            var count = (long)await command.ExecuteScalarAsync();
+            return count > 0;
+        }
     }
 }

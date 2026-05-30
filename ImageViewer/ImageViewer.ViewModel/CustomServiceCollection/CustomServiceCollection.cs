@@ -59,6 +59,9 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddSingleton<HashService>();
             _serviceCollection.AddTransient<ExtensionService>();
             _serviceCollection.AddTransient<DuplicateImageService>();
+            _serviceCollection.AddTransient<DriverDataService>();
+            _serviceCollection.AddTransient<FileDataService>();
+            _serviceCollection.AddTransient<FileMetaInfoService>();
             _serviceCollection.AddSingleton<XmlConfigService>(provider =>
             {
                 return new XmlConfigService("F:\\.thumbnails_1\\config.xml", 300000);

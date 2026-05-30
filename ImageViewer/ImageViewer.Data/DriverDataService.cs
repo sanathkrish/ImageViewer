@@ -58,5 +58,36 @@ namespace ImageViewer.Data
             var rowsAffected = await command.ExecuteNonQueryAsync();
             return rowsAffected > 0;
         }
+
+        public async Task<List<DriverInfo>> GetAllFileDriversAsync()
+        {
+            var drivers = new List<DriverInfo>();
+            using var command = _connection.CreateCommand();
+            command.CommandText = "SELECT Id, Name, Path, type, DateAdded, totalSpace, freespace FROM drivers";
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                drivers.Add(new DriverInfo
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(2),
+                    Path = reader.GetString(3),
+                    Type = reader.GetString(4),
+                    DateAdded = reader.GetDateTime(5),
+                    TotalSize = reader.GetInt64(6),
+                    FreeSpace = reader.GetInt64(7)
+                });
+            }
+            return drivers;
+        }
+
+        public async Task<bool> RecordExistsForPath(string path)
+        {
+            using var command = _connection.CreateCommand();
+            command.CommandText = "SELECT COUNT(1) FROM Drivers WHERE lower(Path) = lower(@path)";
+            command.Parameters.AddWithValue("@path", path);
+            var count = (long)await command.ExecuteScalarAsync();
+            return count > 0;
+        }
     }
 }
