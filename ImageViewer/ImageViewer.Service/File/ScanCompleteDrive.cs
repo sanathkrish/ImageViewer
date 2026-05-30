@@ -12,13 +12,17 @@ namespace ImageViewer.Service.File
         private readonly FileMetaInfoService _fileMetaInfoService;
         private readonly DriverDataService _driverDataService;
         private readonly ImageViewer.Service.HashService _hashService;
+        private readonly ImageViewer.Service.ImageAnalysisService _imageAnalysis;
+        private readonly ImageViewer.Service.ImageAnalysisWorker _analysisWorker;
 
-        public ScanCompleteDrive(FileDataService fileDataService, FileMetaInfoService fileMetaInfoService, DriverDataService driverDataService, ImageViewer.Service.HashService hashService)
+        public ScanCompleteDrive(FileDataService fileDataService, FileMetaInfoService fileMetaInfoService, DriverDataService driverDataService, ImageViewer.Service.HashService hashService, ImageViewer.Service.ImageAnalysisService imageAnalysis, ImageViewer.Service.ImageAnalysisWorker analysisWorker)
         {
             _fileDataService = fileDataService;
             _fileMetaInfoService = fileMetaInfoService;
             _driverDataService = driverDataService;
             _hashService = hashService;
+            _imageAnalysis = imageAnalysis;
+            _analysisWorker = analysisWorker;
         }
 
         public async Task ScanDriverAsync(string driverPath, IProgress<string> progress = null, System.Threading.CancellationToken cancellationToken = default)

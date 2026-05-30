@@ -20,13 +20,20 @@ namespace ImageViewer.ViewModel.File
             _scanner = scanner;
             _events = EventAggreator.Instance;
             _events.Subscribe<string>("scan.progress", OnProgress);
+            _events.Subscribe<ImageViewer.Service.Models.FileAnalysisResult>("analysis.completed", OnAnalysisCompleted);
             StartScanCommand = new AsyncRelayCommand<string>(StartScanAsync);
             StopScanCommand = new RelayCommand(() => { CancelScan(); });
             ProgressItems = new ObservableCollection<string>();
+            DuplicateItems = new ObservableCollection<ImageViewer.Service.Models.FileAnalysisResult>();
+            BlurredItems = new ObservableCollection<ImageViewer.Service.Models.FileAnalysisResult>();
+            CorruptedItems = new ObservableCollection<ImageViewer.Service.Models.FileAnalysisResult>();
         }
 
         // UI-bound properties
         public ObservableCollection<string> ProgressItems { get; }
+        public ObservableCollection<ImageViewer.Service.Models.FileAnalysisResult> DuplicateItems { get; }
+        public ObservableCollection<ImageViewer.Service.Models.FileAnalysisResult> BlurredItems { get; }
+        public ObservableCollection<ImageViewer.Service.Models.FileAnalysisResult> CorruptedItems { get; }
 
         private string _currentFile;
         public string CurrentFile { get => _currentFile; set => SetProperty(ref _currentFile, value); }
@@ -49,6 +56,20 @@ namespace ImageViewer.ViewModel.File
                 ProgressItems.Add(path);
                 FilesScanned = ProgressItems.Count;
                 CurrentFile = path;
+            }
+            catch { }
+        }
+
+        private void OnAnalysisCompleted(ImageViewer.Service.Models.FileAnalysisResult result)
+        {
+            try
+            {
+                if (result.IsDuplicate)
+                    DuplicateItems.Add(result);
+                if (result.IsBlurred)
+                    BlurredItems.Add(result);
+                if (result.IsCorrupted)
+                    CorruptedItems.Add(result);
             }
             catch { }
         }

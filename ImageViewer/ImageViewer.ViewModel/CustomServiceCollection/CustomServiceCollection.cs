@@ -90,6 +90,11 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             // Scan UI viewmodel
             _serviceCollection.AddTransient<ImageViewer.ViewModel.File.ScanDriveViewModel>();
 
+            // Image analysis
+            _serviceCollection.AddSingleton<ImageViewer.Service.ImageAnalysisService>();
+            _serviceCollection.AddSingleton<ImageViewer.Service.ImageAnalysisWorker>();
+            _serviceCollection.AddSingleton<ImageViewer.Service.IPublisher, ImageViewer.ViewModel.EventPublisherForDI>();
+
             // Event aggregator (use existing singleton instance)
             _serviceCollection.AddSingleton<EventAggreator>(provider => EventAggreator.Instance);
 
@@ -118,13 +123,20 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             // Build provider once after all registrations and perform post-start actions
             _serviceProvider = _serviceCollection.BuildServiceProvider();
 
-            // Start background worker via ThumbnailService
-            try
-            {
-                var thumbnailService = _serviceProvider.GetService<ThumbnailService>();
-                thumbnailService?.StartWorker();
-            }
-            catch { }
+                // Start background workers
+                try
+                {
+                    var thumbnailService = _serviceProvider.GetService<ThumbnailService>();
+                    thumbnailService?.StartWorker();
+                }
+                catch { }
+
+                try
+                {
+                    var analysisWorker = _serviceProvider.GetService<ImageViewer.Service.ImageAnalysisWorker>();
+                    analysisWorker?.Start();
+                }
+                catch { }
         }
         public static ServiceCollection GetServiceCollection()
         {
