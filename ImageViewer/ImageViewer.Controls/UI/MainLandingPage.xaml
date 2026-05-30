@@ -87,7 +87,7 @@
             </Grid>
         </Grid>
         <!-- Right Details Panel -->
-        <Border Grid.Column="1" Background="#151B2D" Padding="16">
+        <!--<Border Grid.Column="1" Background="#151B2D" Padding="16">
             <ScrollViewer>
                 <StackPanel Spacing="16">
                     <TextBlock Text="IMG_20230515_101205.jpg" FontWeight="SemiBold" Foreground="White"/>
@@ -103,12 +103,12 @@
 
                     <Pivot>
                         <PivotItem Header="Details">
-                            <!-- Details grid -->
+                            --><!-- Details grid --><!--
                         </PivotItem>
                         <PivotItem Header="Preview"/>
                     </Pivot>
                 </StackPanel>
             </ScrollViewer>
-        </Border>
+        </Border>-->
     </Grid>
 </Page>

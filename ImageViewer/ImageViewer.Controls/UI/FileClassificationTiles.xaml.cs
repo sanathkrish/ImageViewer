@@ -1,3 +1,5 @@
+using ImageViewer.ViewModel.Collections;
+using ImageViewer.ViewModel.CustomServiceCollection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -20,9 +22,14 @@ namespace ImageViewer.Controls.UI
 {
     public sealed partial class FileClassificationTiles : UserControl
     {
+        FileClassificationTileCollection _vm;
+
         public FileClassificationTiles()
         {
+
             InitializeComponent();
+            _vm = CustomServiceCollection.GetService<FileClassificationTileCollection>();
+            this.DataContext = _vm;
         }
     }
 }

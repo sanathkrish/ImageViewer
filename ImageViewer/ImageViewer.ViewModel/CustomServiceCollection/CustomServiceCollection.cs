@@ -71,6 +71,8 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddTransient<ExtensionCollectionViewModel>();
             _serviceCollection.AddTransient<NavigationViewModel>();
             _serviceCollection.AddTransient<NavigationItemViewModel>();
+            _serviceCollection.AddTransient<FileClassificationTileCollection>();
+            _serviceCollection.AddTransient<FileClassificationTileViewModel>();
             _serviceCollection.AddAutoMapper((cfg) => cfg.AddProfile<AutoMapperProfile>());
             var buildServiceProvider = _serviceCollection.BuildServiceProvider();
 
