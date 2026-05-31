@@ -18,10 +18,12 @@ namespace ImageViewer.Data
 
         public async Task AddFileMetaInfo(FileMetaInfo fileMetaInfo)
         {
+            _connection.Open();
+
             using var command = _connection.CreateCommand();
             command.CommandText = @"
-                INSERT INTO FileMetaInfo (FileType, FileId, Duplicate, IsBlurred, IsCorrupted, Similar, IsEmpty, AdditionalMetaInfo)
-                VALUES (@FileType, @FileId, @Duplicate, @IsBlurred, @IsCorrupted, @Similar, @IsEmpty, @AdditionalMetaInfo);";
+                INSERT INTO FileMetaInfo (FileType, FileId, Duplicate, IsBlurred, IsCorrupted, Similar, IsEmpty, Hash,AdditionalMetaInfo)
+                VALUES (@FileType, @FileId, @Duplicate, @IsBlurred, @IsCorrupted, @Similar, @IsEmpty,@hash, @AdditionalMetaInfo);";
             command.Parameters.AddWithValue("@FileType", fileMetaInfo.FileType);
             command.Parameters.AddWithValue("@FileId", fileMetaInfo.FileId);
             command.Parameters.AddWithValue("@Duplicate", fileMetaInfo.Duplicate);
@@ -29,15 +31,19 @@ namespace ImageViewer.Data
             command.Parameters.AddWithValue("@IsCorrupted", fileMetaInfo.IsCorrupted);
             command.Parameters.AddWithValue("@Similar", fileMetaInfo.Similar);
             command.Parameters.AddWithValue("@IsEmpty", fileMetaInfo.IsEmpty);
+            command.Parameters.AddWithValue("@hash", fileMetaInfo.Hash);
             command.Parameters.AddWithValue("@AdditionalMetaInfo", fileMetaInfo.AdditionalMetaInfo);
 
             await command.ExecuteNonQueryAsync();
+
         }
 
         public async Task<FileMetaInfo> GetFileMetaInfoByFileId(int fileId)
         {
+            _connection.Open();
+
             using var command = _connection.CreateCommand();
-            command.CommandText = "SELECT Id, FileType, FileId, Duplicate, IsBlurred, IsCorrupted, Similar, IsEmpty, AdditionalMetaInfo FROM FileMetaInfo WHERE FileId = @fileId";
+            command.CommandText = "SELECT Id, FileType, FileId, Duplicate, IsBlurred, IsCorrupted, Similar, IsEmpty,Hash, AdditionalMetaInfo FROM FileMetaInfo WHERE FileId = @fileId";
             command.Parameters.AddWithValue("@fileId", fileId);
             using var reader = await command.ExecuteReaderAsync();
             if (await reader.ReadAsync())
@@ -52,46 +58,58 @@ namespace ImageViewer.Data
                     IsCorrupted = reader.GetBoolean(5),
                     Similar = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6),
                     IsEmpty = reader.GetBoolean(7),
-                    AdditionalMetaInfo = reader.IsDBNull(8) ? null : reader.GetString(8)
+                    Hash = reader.IsDBNull(8) ? null : reader.GetString(8),
+                    AdditionalMetaInfo = reader.IsDBNull(9) ? null : reader.GetString(9)
                 };
             }
+
             return null;
         }
 
         public async Task<bool> UpdateFileMetaInfo(FileMetaInfo fileMetaInfo)
         {
+            _connection.Open();
+
             using var command = _connection.CreateCommand();
             command.CommandText = @"
                 UPDATE FileMetaInfo
-                SET FileType = @FileType, Duplicate = @Duplicate, IsBlurred = @IsBlurred, IsCorrupted = @IsCorrupted, Similar = @Similar, IsEmpty = @IsEmpty, AdditionalMetaInfo = @AdditionalMetaInfo
+                SET FileType = @FileType, Duplicate = @Duplicate, IsBlurred = @IsBlurred, IsCorrupted = @IsCorrupted,Hash = @hash, Similar = @Similar, IsEmpty = @IsEmpty, AdditionalMetaInfo = @AdditionalMetaInfo
                 WHERE FileId = @FileId";
             command.Parameters.AddWithValue("@FileType", fileMetaInfo.FileType);
             command.Parameters.AddWithValue("@Duplicate", fileMetaInfo.Duplicate);
             command.Parameters.AddWithValue("@IsBlurred", fileMetaInfo.IsBlurred);
             command.Parameters.AddWithValue("@IsCorrupted", fileMetaInfo.IsCorrupted);
+            command.Parameters.AddWithValue("@hash", fileMetaInfo.Hash);
             command.Parameters.AddWithValue("@Similar", fileMetaInfo.Similar);
             command.Parameters.AddWithValue("@IsEmpty", fileMetaInfo.IsEmpty);
             command.Parameters.AddWithValue("@AdditionalMetaInfo", fileMetaInfo.AdditionalMetaInfo);
             command.Parameters.AddWithValue("@FileId", fileMetaInfo.FileId);
             var rowsAffected = await command.ExecuteNonQueryAsync();
+
             return rowsAffected > 0;
         }
 
         public async Task<bool> DeleteFileMetaInfoByFileId(int fileId)
         {
+            _connection.Open();
+
             using var command = _connection.CreateCommand();
             command.CommandText = "DELETE FROM FileMetaInfo WHERE FileId = @fileId";
             command.Parameters.AddWithValue("@fileId", fileId);
             var rowsAffected = await command.ExecuteNonQueryAsync();
+
             return rowsAffected > 0;
         }
 
         public async Task<bool> RecordExistsForFileId(int fileId)
         {
+            _connection.Open();
+
             using var command = _connection.CreateCommand();
             command.CommandText = "SELECT COUNT(1) FROM FileMetaInfo WHERE FileId = @fileId";
             command.Parameters.AddWithValue("@fileId", fileId);
             var count = (long)await command.ExecuteScalarAsync();
+
             return count > 0;
         }
     }

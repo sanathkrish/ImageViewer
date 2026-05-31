@@ -15,9 +15,14 @@ namespace ImageViewer.ViewModel.Views
         private int _count;
         private long _size;
 
-        public string Name { get {return _name; } set { _name = value; } }
-        public int Count { get {return _count; } set { _count = value; } }
-        public long Size { get {return _size; } set { _size = value; } }
+        public string Name { get {return _name; } set { _name = value;OnPropertyChanged(); } }
+        public int Count { get {return _count; } set { _count = value;OnPropertyChanged(); } }
+        public long Size { get {return _size; } set { _size = value;OnPropertyChanged(); } }
         public string SizeString { get=>ConvertMemorySizeToReadableString.Convert(_size); }
+        public Action<Tuple<long,long>> UpdateCount => (c) => 
+        
+        {
+            Count = (int) c.Item1; Size = c.Item2;
+        };
     }
 }

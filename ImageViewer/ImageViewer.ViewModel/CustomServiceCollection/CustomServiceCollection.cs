@@ -5,6 +5,7 @@ using ImageViewer.Service.BackgroundWorkers;
 using ImageViewer.Service.File;
 using ImageViewer.ViewModel.AutoMapperSetup;
 using ImageViewer.ViewModel.Collections;
+using ImageViewer.ViewModel.Events;
 using ImageViewer.ViewModel.Extensions;
 using ImageViewer.ViewModel.File;
 using ImageViewer.ViewModel.Views;
@@ -50,7 +51,7 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
                 //builder.Configure((da)=>);
                 builder.SetMinimumLevel(LogLevel.Information);
             });
-            _serviceCollection.AddSingleton<SqliteConnection>(dbServiceDescription.CreateConnection());
+            _serviceCollection.AddTransient<SqliteConnection>((a)=> dbServiceDescription.CreateConnection());
             _serviceCollection.AddTransient<FileDataService>();
 
             _serviceCollection.AddSingleton<FileService>();
@@ -62,6 +63,7 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddTransient<DriverDataService>();
             _serviceCollection.AddTransient<FileDataService>();
             _serviceCollection.AddTransient<FileMetaInfoService>();
+            _serviceCollection.AddTransient<ScanFileService>();
             _serviceCollection.AddSingleton<XmlConfigService>(provider =>
             {
                 return new XmlConfigService("F:\\.thumbnails_1\\config.xml", 300000);
@@ -76,6 +78,8 @@ namespace ImageViewer.ViewModel.CustomServiceCollection
             _serviceCollection.AddTransient<NavigationItemViewModel>();
             _serviceCollection.AddTransient<FileClassificationTileCollection>();
             _serviceCollection.AddTransient<FileClassificationTileViewModel>();
+            _serviceCollection.AddTransient<MainWindowViewModel>();
+            _serviceCollection.AddSingleton<EventAggreator>(EventAggreator.Instance);
             _serviceCollection.AddAutoMapper((cfg) => cfg.AddProfile<AutoMapperProfile>());
             var buildServiceProvider = _serviceCollection.BuildServiceProvider();
 

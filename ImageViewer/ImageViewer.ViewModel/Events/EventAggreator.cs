@@ -32,6 +32,18 @@ namespace ImageViewer.ViewModel.Events
             _eventHandlers[eventName].Add(handler);
         }
 
+        public void Subscribe(string eventName, Action handler)
+        {
+            if (!_eventHandlers.ContainsKey(eventName))
+            {
+                _eventHandlers[eventName] = new List<Delegate>();
+            }
+            if (!_eventHandlers[eventName].OfType < Action>().Any(x=>x == handler))
+            {
+                _eventHandlers[eventName].Add(handler);
+            }
+        }
+
         public void Unsubscribe<TEvent>(string eventName, Action<TEvent> handler)
         {
             if (_eventHandlers.ContainsKey(eventName))
@@ -47,6 +59,17 @@ namespace ImageViewer.ViewModel.Events
                 foreach (var handler in _eventHandlers[eventName].OfType<Action<TEvent>>())
                 {
                     handler(eventData);
+                }
+            }
+        }
+
+        public void Publish(string eventName)
+        {
+            if (_eventHandlers.ContainsKey(eventName))
+            {
+                foreach (var handler in _eventHandlers[eventName].OfType<Action>())
+                {
+                    handler();
                 }
             }
         }

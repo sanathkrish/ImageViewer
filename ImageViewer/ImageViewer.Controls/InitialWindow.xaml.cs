@@ -2,6 +2,7 @@ using ImageViewer.Controls.Pages;
 using ImageViewer.Controls.UI;
 using ImageViewer.Service.Interfaces;
 using ImageViewer.ViewModel.CustomServiceCollection;
+using ImageViewer.ViewModel.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -30,16 +31,21 @@ namespace ImageViewer.Controls
     public sealed partial class InitialWindow : Window
     {
         private INavigationService _navigationService;
+        public MainWindowViewModel vm;
         public InitialWindow()
         {
             InitializeComponent();
             _navigationService = CustomServiceCollection.GetService<INavigationService>();
+            vm = CustomServiceCollection.GetService<MainWindowViewModel>();
             _navigationService.RegisterFrame("main_window", main_window);
             _navigationService.RegisterNavigation("main_window", typeof(MainLandingPage));
             _navigationService.Navigate("main_window", "MainLandingPage", null);
+            this.Activated += InitialWindow_Activated;
         }
 
-
-        
+        private void InitialWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            vm.OnLoaded();
+        }
     }
 }

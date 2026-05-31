@@ -19,6 +19,7 @@
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.11" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ImageViewer.Data\ImageViewer.Data.csproj" />
     <ProjectReference Include="..\ImageViewer.Model\ImageViewer.Model.csproj" />
   </ItemGroup>
   

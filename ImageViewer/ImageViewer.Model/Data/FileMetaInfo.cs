@@ -10,6 +10,7 @@ namespace ImageViewer.Model.Data
     {
         public int Id { get; set;  } = -1;
         public string FileType { get; set; }
+        public string Hash { get; set; }
         public int FileId { get; set; }
         public int? Duplicate { get; set; }
         public bool IsBlurred { get; set; }
